@@ -21,3 +21,8 @@ apiKeys.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Cookies YouTube (ne jamais pousser)
+cookies.txt
+cookies.b64
+video_downloader/cookies.txt

@@ -7,24 +7,49 @@ const COOKIES_FILE = path.join(__dirname, '..', 'cookies.txt');
 
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
-// ─── Trouver yt-dlp (plusieurs emplacements) ───
+// ═══════════════════════════════════════════════════════════
+//  Gestion des cookies YouTube
+// ═══════════════════════════════════════════════════════════
+function ensureCookies() {
+    // 1. Si le fichier existe déjà → OK
+    if (fs.existsSync(COOKIES_FILE)) {
+        console.log(`✅ Cookies présents : ${COOKIES_FILE}`);
+        return true;
+    }
+
+    // 2. Sinon, chercher dans la variable d'environnement
+    const b64 = process.env.YOUTUBE_COOKIES_B64;
+    if (!b64) {
+        console.log('⚠️  Aucun cookie YouTube trouvé (ni fichier, ni variable d\'env)');
+        return false;
+    }
+
+    try {
+        const content = Buffer.from(b64, 'base64').toString('utf-8');
+        fs.writeFileSync(COOKIES_FILE, content);
+        console.log(`✅ Cookies décodés depuis YOUTUBE_COOKIES_B64 → ${COOKIES_FILE}`);
+        return true;
+    } catch (err) {
+        console.error('❌ Erreur décodage cookies :', err.message);
+        return false;
+    }
+}
+
+// Appeler au démarrage
+ensureCookies();
+
+// ═══════════════════════════════════════════════════════════
+//  Localisation des binaires
+// ═══════════════════════════════════════════════════════════
 function findYtdlp() {
-    // 1. Chemin explicite dans bin/ (téléchargé par build.sh)
     const localBin = path.join(__dirname, '..', '..', 'bin', 'yt-dlp');
     if (fs.existsSync(localBin)) {
         try { fs.chmodSync(localBin, 0o755); } catch {}
-        console.log(`✅ yt-dlp trouvé : ${localBin}`);
         return localBin;
     }
-
-    // 2. Dans le PATH (yt-dlp installé via pip)
     const which = spawnSync('which', ['yt-dlp'], { encoding: 'utf-8' });
-    if (which.status === 0 && which.stdout.trim()) {
-        console.log(`✅ yt-dlp dans le PATH : ${which.stdout.trim()}`);
-        return 'yt-dlp';
-    }
+    if (which.status === 0 && which.stdout.trim()) return 'yt-dlp';
 
-    // 3. Chercher dans les emplacements pip classiques
     const possiblePaths = [
         '/usr/local/bin/yt-dlp',
         '/usr/bin/yt-dlp',
@@ -33,24 +58,18 @@ function findYtdlp() {
     for (const p of possiblePaths) {
         if (fs.existsSync(p)) {
             try { fs.chmodSync(p, 0o755); } catch {}
-            console.log(`✅ yt-dlp trouvé : ${p}`);
             return p;
         }
     }
-
-    console.log('⚠️  yt-dlp introuvable, on utilisera "yt-dlp" par défaut');
     return 'yt-dlp';
 }
 
 const YTDLP = findYtdlp();
 
-// ─── Trouver ffmpeg ───
 function findFfmpeg() {
     const which = spawnSync('which', ['ffmpeg'], { encoding: 'utf-8' });
     if (which.status === 0 && which.stdout.trim()) return which.stdout.trim();
-
-    const possiblePaths = ['/usr/bin/ffmpeg', '/usr/local/bin/ffmpeg'];
-    for (const p of possiblePaths) {
+    for (const p of ['/usr/bin/ffmpeg', '/usr/local/bin/ffmpeg']) {
         if (fs.existsSync(p)) return p;
     }
     return 'ffmpeg';
@@ -58,7 +77,6 @@ function findFfmpeg() {
 
 const FFMPEG = findFfmpeg();
 
-// Détecter le runtime JS (deno prioritaire, sinon node)
 function detectJsRuntime() {
     try {
         const deno = spawnSync('deno', ['--version'], { stdio: 'ignore' });
@@ -69,7 +87,9 @@ function detectJsRuntime() {
 
 const JS_RUNTIME = detectJsRuntime();
 
-// ─── Vérification ───
+// ═══════════════════════════════════════════════════════════
+//  Helpers
+// ═══════════════════════════════════════════════════════════
 function check() {
     return new Promise((resolve) => {
         const p = spawn(YTDLP, ['--version']);
@@ -78,7 +98,6 @@ function check() {
     });
 }
 
-// ─── Métadonnées ───
 function getInfo(url) {
     return new Promise((resolve, reject) => {
         const args = ['-J', '--no-playlist', '--no-warnings', '--js-runtimes', JS_RUNTIME, url];
@@ -87,7 +106,6 @@ function getInfo(url) {
 
         const yt = spawn(YTDLP, args);
         let out = '', err = '';
-
         yt.stdout.on('data', (d) => (out += d.toString()));
         yt.stderr.on('data', (d) => (err += d.toString()));
         yt.on('error', (e) => reject(new Error(`yt-dlp introuvable (${YTDLP}) : ${e.message}`)));
@@ -99,7 +117,6 @@ function getInfo(url) {
     });
 }
 
-// ─── Téléchargement ───
 function download({ url, formatArgs, token }) {
     return new Promise((resolve, reject) => {
         const outTpl = path.join(OUTPUT_DIR, `${token}.%(ext)s`);
@@ -111,10 +128,6 @@ function download({ url, formatArgs, token }) {
 
         const before = new Set(fs.readdirSync(OUTPUT_DIR));
 
-        console.log(`⬇️  yt-dlp: ${YTDLP}`);
-        console.log(`📁 Output: ${outTpl}`);
-        console.log(`🎬 ffmpeg: ${FFMPEG}`);
-
         const proc = spawn(YTDLP, args);
         proc.stdout.on('data', (d) => process.stdout.write(d));
         proc.stderr.on('data', (d) => process.stderr.write(d));
@@ -125,19 +138,16 @@ function download({ url, formatArgs, token }) {
 
             const after = fs.readdirSync(OUTPUT_DIR);
             const created = after.find((f) => !before.has(f) && f.startsWith(token));
-
             if (!created) return reject(new Error('Fichier non créé'));
 
             const fullPath = path.join(OUTPUT_DIR, created);
             const stat = fs.statSync(fullPath);
             const ext = path.extname(created).slice(1);
-
             resolve({ token, filename: created, path: fullPath, size: stat.size, ext });
         });
     });
 }
 
-// ─── Suppression ───
 function removeByToken(token) {
     try {
         const safe = String(token).replace(/[^a-f0-9]/gi, '');
@@ -147,7 +157,6 @@ function removeByToken(token) {
     } catch { return false; }
 }
 
-// ─── Nettoyage ───
 function cleanup(maxAgeMs = 30 * 60 * 1000) {
     try {
         const now = Date.now();
@@ -156,10 +165,7 @@ function cleanup(maxAgeMs = 30 * 60 * 1000) {
             const full = path.join(OUTPUT_DIR, f);
             try {
                 const stat = fs.statSync(full);
-                if (now - stat.mtimeMs > maxAgeMs) {
-                    fs.unlinkSync(full);
-                    count++;
-                }
+                if (now - stat.mtimeMs > maxAgeMs) { fs.unlinkSync(full); count++; }
             } catch {}
         });
         if (count > 0) console.log(`🧹 ${count} fichier(s) supprimé(s)`);
@@ -168,6 +174,6 @@ function cleanup(maxAgeMs = 30 * 60 * 1000) {
 
 module.exports = {
     check, getInfo, download, removeByToken, cleanup,
-    OUTPUT_DIR, COOKIES_FILE, JS_RUNTIME,
-    YTDLP, FFMPEG
+    OUTPUT_DIR, COOKIES_FILE, JS_RUNTIME, YTDLP, FFMPEG,
+    ensureCookies
 };
