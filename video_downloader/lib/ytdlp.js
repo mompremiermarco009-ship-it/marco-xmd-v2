@@ -2,32 +2,13 @@ const { spawn, spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Chemins vers ffmpeg (Render n'a pas ffmpeg en système par défaut)
-let ffmpegPath = null;
-try {
-    ffmpegPath = require('ffmpeg-static');
-    console.log('🎬 ffmpeg-static:', ffmpegPath);
-} catch {
-    // Fallback : utiliser ffmpeg du système (Render en a un)
-    console.log('⚠️ ffmpeg-static non installé, utilisation du ffmpeg système');
-}
-
-// Détecter aussi yt-dlp dans ./bin (installé par build.sh sur Render)
-const fs = require('fs');
-const path = require('path');
-let ytDlpBinary = 'yt-dlp';
-const localYtDlp = path.join(__dirname, '..', '..', 'bin', 'yt-dlp');
-if (fs.existsSync(localYtDlp)) {
-    ytDlpBinary = localYtDlp;
-    console.log('✅ yt-dlp local détecté:', ytDlpBinary);
-}
-
-
 const OUTPUT_DIR = path.join(__dirname, '..', 'tmp');
 const COOKIES_FILE = path.join(__dirname, '..', 'cookies.txt');
 
+// Créer le dossier tmp s'il n'existe pas
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
+// Détecter le runtime JS pour yt-dlp (deno prioritaire, sinon node)
 function detectJsRuntime() {
     try {
         const deno = spawnSync('deno', ['--version'], { stdio: 'ignore' });
@@ -38,36 +19,36 @@ function detectJsRuntime() {
 
 const JS_RUNTIME = detectJsRuntime();
 
+// Vérifie que yt-dlp est disponible
 function check() {
     return new Promise((resolve) => {
-        const p = spawn(ytDlpBinary, ['--version']);
+        const p = spawn('yt-dlp', ['--version']);
         p.on('close', (code) => resolve(code === 0));
         p.on('error', () => resolve(false));
     });
 }
 
+// Récupère les métadonnées d'une vidéo
 function getInfo(url) {
     return new Promise((resolve, reject) => {
         const args = ['-J', '--no-playlist', '--no-warnings', '--js-runtimes', JS_RUNTIME, url];
         if (fs.existsSync(COOKIES_FILE)) args.push('--cookies', COOKIES_FILE);
 
-        const yt = spawn(ytDlpBinary, args);
+        const yt = spawn('yt-dlp', args);
         let out = '', err = '';
+
         yt.stdout.on('data', (d) => (out += d.toString()));
         yt.stderr.on('data', (d) => (err += d.toString()));
         yt.on('error', (e) => reject(new Error(`yt-dlp introuvable : ${e.message}`)));
         yt.on('close', (code) => {
             if (code !== 0) return reject(new Error(err.trim() || `yt-dlp code ${code}`));
             try { resolve(JSON.parse(out)); }
-            catch { reject(new Error('Réponse JSON invalide')); }
+            catch { reject(new Error('Réponse JSON invalide de yt-dlp')); }
         });
     });
 }
 
-/**
- * Télécharge une vidéo dans le dossier tmp/ avec un token unique
- * @returns {Promise<{token, filename, path, size}>}
- */
+// Télécharge une vidéo dans tmp/ avec un token unique
 function download({ url, formatArgs, token }) {
     return new Promise((resolve, reject) => {
         const outTpl = path.join(OUTPUT_DIR, `${token}.%(ext)s`);
@@ -78,7 +59,7 @@ function download({ url, formatArgs, token }) {
 
         const before = new Set(fs.readdirSync(OUTPUT_DIR));
 
-        const proc = spawn(ytDlpBinary, args);
+        const proc = spawn('yt-dlp', args);
         proc.stdout.on('data', (d) => process.stdout.write(d));
         proc.stderr.on('data', (d) => process.stderr.write(d));
 
@@ -106,9 +87,7 @@ function download({ url, formatArgs, token }) {
     });
 }
 
-/**
- * Supprime un fichier par token
- */
+// Supprime les fichiers d'un token
 function removeByToken(token) {
     try {
         const safe = String(token).replace(/[^a-f0-9]/gi, '');
@@ -118,9 +97,7 @@ function removeByToken(token) {
     } catch { return false; }
 }
 
-/**
- * Nettoyage des fichiers > maxAgeMs (défaut 30 min)
- */
+// Nettoie les fichiers > maxAgeMs (défaut 30 min)
 function cleanup(maxAgeMs = 30 * 60 * 1000) {
     try {
         const now = Date.now();
@@ -139,4 +116,13 @@ function cleanup(maxAgeMs = 30 * 60 * 1000) {
     } catch {}
 }
 
-module.exports = { check, getInfo, download, removeByToken, cleanup, OUTPUT_DIR, COOKIES_FILE, JS_RUNTIME, ffmpegPath, ytDlpBinary };
+module.exports = {
+    check,
+    getInfo,
+    download,
+    removeByToken,
+    cleanup,
+    OUTPUT_DIR,
+    COOKIES_FILE,
+    JS_RUNTIME
+};
