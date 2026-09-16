@@ -26,3 +26,7 @@ Thumbs.db
 cookies.txt
 cookies.b64
 video_downloader/cookies.txt
+bot.log
+server.log
+core
+core.*
