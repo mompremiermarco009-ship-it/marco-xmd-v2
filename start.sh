@@ -11,5 +11,9 @@ if [ -f "requirements.txt" ]; then
     echo "⚠️ Impossible d'installer les dépendances Python"
 fi
 
+# Ajouter le binaire yt-dlp local au PATH
+export PATH="$PWD/bin:$PATH"
 export PORT=${PORT:-10000}
-node start-all.js
+
+echo "🚀 Démarrage MARCO-XMD sur le port $PORT"
+node index.js
