@@ -7,11 +7,14 @@
   "emoji": "🍷",
   "version": "2.0.0",
 
-  "logo": "https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png",
-  "logoConnect": "https://i.postimg.cc/Pf8FjZW4/Marcoxmd-logo-connect.png",
-  "logoWelcome": "https://i.postimg.cc/zfVFkZpQ/Marcoxmd-logo-welcome.png",
-  "logoGoodbye": "https://i.postimg.cc/Dwfg8bXL/Marcoxmd-logo-goodbye.png",
-  "botLogo": "https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png",
+  "logo":            "https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png",
+  "logoConnect":     "https://i.postimg.cc/Pf8FjZW4/Marcoxmd-logo-connect.png",
+  "logoWelcome":     "https://i.postimg.cc/zfVFkZpQ/Marcoxmd-logo-welcome.png",
+  "logoGoodbye":     "https://i.postimg.cc/Dwfg8bXL/Marcoxmd-logo-goodbye.png",
+  "logoDownloader":  "https://i.postimg.cc/T2sBvyph/Marcoxmd-logo-downloads.png",
+  "logoUtils":       "https://i.postimg.cc/W3NczQvm/Marcoxmd-logo-utils.png",
+  "logoGroup":       "https://i.postimg.cc/MGzFmVrC/Marcoxmd-logo-group.png",
+  "logoOwner":       "https://i.postimg.cc/2jPmF9dG/Marcoxmd-logo-owner.png",
 
   "publicUrl": "https://marco-xmd-v2.onrender.com",
 
