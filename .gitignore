@@ -1,0 +1,23 @@
+# Dépendances
+node_modules/
+
+# Sessions WhatsApp (sensibles)
+sessions/
+
+# Fichiers temporaires
+voice_studio/tmp/
+voice_studio/audio/
+video_downloader/tmp/
+video_downloader/downloads/
+downloads/
+*.log
+*.tmp
+
+# Fichiers sensibles
+cookies.txt
+.env
+apiKeys.json
+
+# OS
+.DS_Store
+Thumbs.db

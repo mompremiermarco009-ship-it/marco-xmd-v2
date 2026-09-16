@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARCO-XMD | Dashboard</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            const saved = localStorage.getItem('marco-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
+        })();
+    </script>
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --primary-light: #3b82f6;
+            --primary-dark: #0a4db3;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface-alt: #f1f5f9;
+            --text: #0f172a;
+            --text-soft: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 40px rgba(13,110,253,0.10);
+            --modal-overlay: rgba(15, 23, 42, 0.6);
+            --code-bg: #eff6ff;
+        }
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #1d4ed8;
+            --bg: #0a0e1a;
+            --surface: #111827;
+            --surface-alt: #1e293b;
+            --text: #f1f5f9;
+            --text-soft: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #1e293b;
+            --border-hover: #334155;
+            --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+            --modal-overlay: rgba(0, 0, 0, 0.85);
+            --code-bg: #1e3a5f;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ============ NAVBAR ============ */
+        .navbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .navbar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand img {
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+        .brand-info h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+        .brand-info span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .navbar-actions { display: flex; gap: 8px; align-items: center; }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.86rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-soft);
+            transition: all 0.15s;
+        }
+        .nav-btn:hover {
+            background: var(--surface-alt);
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+        .nav-btn.primary {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .nav-btn.primary:hover { background: var(--primary-dark); }
+        .theme-toggle {
+            width: 40px; height: 40px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-soft);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--surface-alt);
+            color: var(--primary);
+            transform: rotate(15deg);
+        }
+        .theme-toggle .icon-sun,
+        .theme-toggle .icon-moon {
+            position: absolute;
+            transition: transform 0.4s ease, opacity 0.3s ease;
+        }
+        [data-theme="light"] .theme-toggle .icon-sun { opacity: 0; transform: rotate(180deg) scale(0); }
+        [data-theme="light"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+        [data-theme="dark"] .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+        [data-theme="dark"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(-180deg) scale(0); }
+
+        /* ============ CONTAINER ============ */
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+        /* ============ SESSION SELECTOR ============ */
+        .session-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow);
+        }
+        .session-bar label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-soft);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .session-bar label i { color: var(--primary); }
+        .session-bar select {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.92rem;
+            font-family: inherit;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .session-bar select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+        }
+
+        /* ============ TABS ============ */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 6px;
+            margin-bottom: 22px;
+            overflow-x: auto;
+            box-shadow: var(--shadow);
+        }
+        .tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--text-soft);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .tab:hover { background: var(--surface-alt); color: var(--text); }
+        .tab.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(13,110,253,0.25);
+        }
+
+        /* ============ PAGE ============ */
+        .page { display: none; animation: fadeIn 0.3s ease-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ STATS GRID ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--border-hover);
+        }
+        .stat-card .sc-icon {
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            background: var(--code-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+        }
+        .stat-card .sc-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .stat-card .sc-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+        .stat-card .sc-value.small {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: var(--danger);
+        }
+        .status-dot.online {
+            background: var(--success);
+            box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+            animation: pulseGreen 2s infinite;
+        }
+        @keyframes pulseGreen {
+            0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+            100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+        }
+
+        /* ============ CARD ============ */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow);
+        }
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .card-title i { color: var(--primary); }
+        .card-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-soft);
+            margin-bottom: 18px;
+        }
+
+        /* ============ TABLE ============ */
+        .table-wrap { overflow-x: auto; margin: 0 -8px; padding: 0 8px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        thead th {
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+            background: var(--surface-alt);
+        }
+        thead th:first-child { border-top-left-radius: 8px; }
+        thead th:last-child { border-top-right-radius: 8px; }
+        tbody td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-soft);
+            vertical-align: middle;
+        }
+        tbody tr:hover td { background: var(--surface-alt); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        /* ============ BUTTONS ============ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+            text-decoration: none;
+            font-family: inherit;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            background: var(--surface-alt);
+            border-color: var(--border-hover);
+        }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-sm { padding: 7px 14px; font-size: 0.8rem; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ============ FORM ============ */
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-soft);
+            margin-bottom: 6px;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--bg);
+            outline: none;
+            transition: 0.15s;
+        }
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+            background: var(--surface);
+        }
+
+        /* ============ GRID 2 COLS ============ */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* ============ BADGE ============ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge.success { background: #d1fae5; color: #059669; }
+        .badge.danger { background: #fee2e2; color: #dc2626; }
+        .badge.info { background: var(--code-bg); color: var(--primary); }
+        [data-theme="dark"] .badge.success { background: #064e3b; color: #6ee7b7; }
+        [data-theme="dark"] .badge.danger { background: #7f1d1d; color: #fca5a5; }
+
+        /* ============ EMPTY ============ */
+        .empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .empty i {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        /* ============ COMMANDS GRID ============ */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+        }
+        .command-item {
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            transition: all 0.15s;
+        }
+        .command-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .command-item .ci-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .command-item .ci-desc {
+            font-size: 0.82rem;
+            color: var(--text-soft);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .command-item .ci-cat {
+            display: inline-block;
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 8px;
+            background: var(--code-bg);
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ============ QR RESULT ============ */
+        .qr-box {
+            text-align: center;
+            padding: 20px;
+            background: var(--surface-alt);
+            border-radius: var(--radius);
+            border: 2px dashed var(--border);
+            margin-top: 16px;
+        }
+        .qr-box img {
+            max-width: 220px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+        .code-box {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--primary);
+            padding: 18px;
+            background: var(--code-bg);
+            border: 2px dashed var(--primary-light);
+            border-radius: var(--radius);
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        /* ============ MODAL ============ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            animation: modalIn 0.25s ease-out;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .modal-header h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--text); }
+
+        /* ============ TOAST ============ */
+        .toast {
+            position: fixed;
+            bottom: 22px; right: 22px;
+            background: var(--text);
+            color: var(--bg);
+            padding: 14px 22px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 2000;
+            max-width: 90%;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.error { background: var(--danger); color: #fff; }
+        .toast.success { background: var(--success); color: #fff; }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            text-align: center;
+            padding: 26px 20px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        .footer strong { color: var(--text-soft); }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 640px) {
+            .navbar { padding: 12px 16px; }
+            .brand img { width: 36px; height: 36px; }
+            .brand-info h1 { font-size: 0.95rem; }
+            .nav-btn { padding: 8px 12px; font-size: 0.8rem; }
+            .nav-btn span { display: none; }
+            .theme-toggle { width: 36px; height: 36px; font-size: 0.9rem; }
+            .container { padding: 16px; }
+            .card, .stat-card { padding: 18px; }
+            .tab { padding: 8px 14px; font-size: 0.8rem; }
+            .tab span { display: none; }
+            .session-bar { padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="navbar-inner">
+        <div class="brand">
+            <img src="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png" alt="MARCO-XMD">
+            <div class="brand-info">
+                <h1>MARCO-XMD</h1>
+                <span>Dashboard v2.0</span>
+            </div>
+        </div>
+        <div class="navbar-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+                <i class="fas fa-sun icon-sun"></i>
+                <i class="fas fa-moon icon-moon"></i>
+            </button>
+            <a class="nav-btn" href="/">
+                <i class="fas fa-home"></i>
+                <span>Accueil</span>
+            </a>
+            <button class="nav-btn primary" onclick="refreshAll()">
+                <i class="fas fa-sync-alt"></i>
+                <span>Actualiser</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Session selector -->
+    <div class="session-bar">
+        <label><i class="fas fa-layer-group"></i> Session active :</label>
+        <select id="sessionSelect" onchange="onSessionChange()">
+            <option>Chargement...</option>
+        </select>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" data-page="dashboard" onclick="showPage('dashboard', this)">
+            <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+        </button>
+        <button class="tab" data-page="commands" onclick="showPage('commands', this)">
+            <i class="fas fa-terminal"></i> <span>Commandes</span>
+        </button>
+        <button class="tab" data-page="sessions" onclick="showPage('sessions', this)">
+            <i class="fas fa-qrcode"></i> <span>Sessions</span>
+        </button>
+        <button class="tab" data-page="logs" onclick="showPage('logs', this)">
+            <i class="fas fa-scroll"></i> <span>Logs</span>
+        </button>
+        <button class="tab" data-page="settings" onclick="showPage('settings', this)">
+            <i class="fas fa-cog"></i> <span>Paramètres</span>
+        </button>
+    </div>
+
+    <!-- ============ DASHBOARD ============ -->
+    <div id="dashboard" class="page active">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="sc-icon"><i class="fas fa-circle"></i></div>
+                <div class="sc-label">État</div>
+                <div class="sc-value" id="statStatus">
+                    <span class="status-dot offline"></span>Hors ligne
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-icon"><i class="fas fa-terminal"></i></div>
+                <div class="sc-label">Commandes</div>
+                <div class="sc-value" id="statCommands">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="sc-label">Sessions</div>
+                <div class="sc-value" id="statSessions">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-icon"><i class="fas fa-hashtag"></i></div>
+                <div class="sc-label">ID Session</div>
+                <div class="sc-value small" id="statID">—</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-list"></i> Sessions connectées</div>
+            <div class="card-subtitle">Toutes les sessions enregistrées</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Nom</th><th>État</th><th>Cmd</th></tr>
+                    </thead>
+                    <tbody id="sessionsTable">
+                        <tr><td colspan="4" class="empty">Chargement...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ COMMANDES ============ -->
+    <div id="commands" class="page">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-terminal"></i> Commandes chargées</div>
+            <div class="card-subtitle">Session : <span id="cmdSessionLabel">—</span></div>
+            <div class="form-group">
+                <input class="form-input" id="commandSearch" placeholder="🔍 Rechercher une commande..." onkeyup="filterCommands()">
+            </div>
+            <div id="commandsList" class="commands-grid"></div>
+        </div>
+    </div>
+
+    <!-- ============ SESSIONS ============ -->
+    <div id="sessions" class="page">
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-plus-circle"></i> Nouvelle session</div>
+                <div class="card-subtitle">Connecter un nouveau bot WhatsApp</div>
+                <div class="form-group">
+                    <label class="form-label">Numéro (avec indicatif)</label>
+                    <input class="form-input" id="newPhone" placeholder="509xxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Méthode de connexion</label>
+                    <select class="form-select" id="newMethod">
+                        <option value="pair">Code d'appariement</option>
+                        <option value="qr">QR Code</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" style="width:100%;" onclick="createSession()">
+                    <i class="fas fa-link"></i> Connecter
+                </button>
+                <div id="pairResult"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-trash-alt"></i> Session active</div>
+                <div class="card-subtitle" id="qrSessionLabel">—</div>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:14px; background:var(--surface-alt); border-radius:var(--radius-sm);">
+                    <span class="status-dot offline" id="qrStatusDot"></span>
+                    <span style="font-weight:600;" id="qrStatusText">Hors ligne</span>
+                </div>
+                <button class="btn btn-danger" style="width:100%;" onclick="deleteCurrentSession()">
+                    <i class="fas fa-trash"></i> Supprimer cette session
+                </button>
+                <div style="margin-top:12px; font-size:0.8rem; color:var(--text-muted); text-align:center;">
+                    ⚠️ Cette action est irréversible
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ LOGS ============ -->
+    <div id="logs" class="page">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-scroll"></i> Journal d'activité</div>
+            <div class="card-subtitle">Session : <span id="logSessionLabel">—</span></div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Heure</th><th>Action</th><th>Description</th><th>Sévérité</th></tr>
+                    </thead>
+                    <tbody id="logsTable">
+                        <tr><td colspan="4" class="empty">Chargement...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ PARAMÈTRES ============ -->
+    <div id="settings" class="page">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-cog"></i> Configuration</div>
+            <div class="card-subtitle">Session : <span id="cfgSessionLabel">—</span></div>
+            <div class="grid-2">
+                <div>
+                    <div class="form-group">
+                        <label class="form-label">Nom du bot</label>
+                        <input class="form-input" id="cfgBotName" placeholder="MARCO-XMD">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nom du propriétaire</label>
+                        <input class="form-input" id="cfgOwnerName" placeholder="Mr_Marco">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Numéro du propriétaire</label>
+                        <input class="form-input" id="cfgOwnerNumber" placeholder="509xxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Emoji signature</label>
+                        <input class="form-input" id="cfgEmoji" maxlength="4" placeholder="🍷">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Préfixe des commandes</label>
+                        <input class="form-input" id="cfgPrefix" maxlength="3" placeholder=".">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label class="form-label">Logo principal (URL)</label>
+                        <input class="form-input" id="cfgLogo" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Logo connexion (URL)</label>
+                        <input class="form-input" id="cfgLogoConnect" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Logo bienvenue (URL)</label>
+                        <input class="form-input" id="cfgLogoWelcome" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Logo au revoir (URL)</label>
+                        <input class="form-input" id="cfgLogoGoodbye" placeholder="https://...">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Sauvegarder les paramètres
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    © 2026 <strong>MARCO-XMD</strong> · by Marco Project · Tous droits réservés
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api/admin';
+let currentSession = null;
+let allSessions = [];
+let allCommands = [];
+
+/* ============ THÈME ============ */
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('marco-theme', next);
+}
+
+/* ============ TOAST ============ */
+function toast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    setTimeout(() => t.className = 'toast ' + type, 2500);
+}
+
+/* ============ API ============ */
+async function api(path, opts = {}) {
+    const res = await fetch(API + path, {
+        headers: { 'Content-Type': 'application/json' },
+        ...opts
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+    return data;
+}
+
+/* ============ NAVIGATION ============ */
+function showPage(name, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    if (el) el.classList.add('active');
+    loadPageData(name);
+}
+
+/* ============ SESSIONS ============ */
+async function loadSessionsList() {
+    allSessions = await api('/sessions');
+    const sel = document.getElementById('sessionSelect');
+    if (allSessions.length) {
+        sel.innerHTML = allSessions.map(s =>
+            `<option value="${s.id}">${escapeHtml(s.botName)} (${s.id})</option>`
+        ).join('');
+    } else {
+        sel.innerHTML = '<option value="">Aucune session</option>';
+    }
+    if (!currentSession && allSessions[0]) currentSession = allSessions[0].id;
+    if (currentSession) sel.value = currentSession;
+    renderSessionsTable();
+}
+
+function renderSessionsTable() {
+    const tbody = document.getElementById('sessionsTable');
+    if (!allSessions.length) {
+        tbody.innerHTML = `<tr><td colspan="4" class="empty"><i class="fas fa-inbox"></i>Aucune session active</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = allSessions.map(s => `
+        <tr>
+            <td><code style="font-family:'JetBrains Mono'; font-size:0.82rem;">${escapeHtml(s.id)}</code></td>
+            <td><strong style="color:var(--text);">${escapeHtml(s.botName)}</strong></td>
+            <td>
+                <span class="badge ${s.isReady ? 'success' : 'danger'}">
+                    <span class="status-dot ${s.isReady ? 'online' : 'offline'}" style="width:6px;height:6px;"></span>
+                    ${s.isReady ? 'En ligne' : 'Hors ligne'}
+                </span>
+            </td>
+            <td><span class="badge info">${s.commandCount}</span></td>
+        </tr>
+    `).join('');
+}
+
+function onSessionChange() {
+    currentSession = document.getElementById('sessionSelect').value;
+    document.querySelectorAll('#cmdSessionLabel, #logSessionLabel, #cfgSessionLabel, #qrSessionLabel')
+        .forEach(el => el.textContent = currentSession || '—');
+    refreshAll();
+}
+
+async function refreshAll() {
+    await loadSessionsList();
+    document.querySelectorAll('#cmdSessionLabel, #logSessionLabel, #cfgSessionLabel, #qrSessionLabel')
+        .forEach(el => el.textContent = currentSession || '—');
+    const active = document.querySelector('.page.active');
+    if (active) loadPageData(active.id);
+}
+
+/* ============ LOAD PAGE DATA ============ */
+async function loadPageData(name) {
+    if (!currentSession && name !== 'dashboard' && name !== 'sessions') return;
+    try {
+        if (name === 'dashboard') {
+            const s = allSessions.find(x => x.id === currentSession);
+            if (s) {
+                const statusEl = document.getElementById('statStatus');
+                statusEl.innerHTML = `<span class="status-dot ${s.isReady ? 'online' : 'offline'}"></span>${s.isReady ? 'En ligne' : 'Hors ligne'}`;
+                document.getElementById('statCommands').textContent = s.commandCount;
+                document.getElementById('statID').textContent = s.id;
+            }
+            document.getElementById('statSessions').textContent = allSessions.length;
+        } else if (name === 'commands') {
+            allCommands = await api(`/sessions/${currentSession}/commands`);
+            renderCommands(allCommands);
+        } else if (name === 'sessions') {
+            const s = allSessions.find(x => x.id === currentSession);
+            document.getElementById('qrSessionLabel').textContent = currentSession || '—';
+            document.getElementById('qrStatusDot').className = 'status-dot ' + (s?.isReady ? 'online' : 'offline');
+            document.getElementById('qrStatusText').textContent = s?.isReady ? 'En ligne' : 'Hors ligne';
+        } else if (name === 'logs') {
+            const list = await api(`/sessions/${currentSession}/logs`);
+            const tbody = document.getElementById('logsTable');
+            if (!list.length) {
+                tbody.innerHTML = `<tr><td colspan="4" class="empty"><i class="fas fa-scroll"></i>Aucune activité enregistrée</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = list.map(l => {
+                const sev = l.severity || 'info';
+                const cls = sev === 'error' ? 'danger' : (sev === 'warning' ? 'info' : 'success');
+                return `<tr>
+                    <td><code style="font-family:'JetBrains Mono'; font-size:0.8rem;">${new Date(l.timestamp).toLocaleTimeString('fr-FR')}</code></td>
+                    <td>${escapeHtml(l.action)}</td>
+                    <td>${escapeHtml(l.description)}</td>
+                    <td><span class="badge ${cls}">${escapeHtml(sev)}</span></td>
+                </tr>`;
+            }).join('');
+        } else if (name === 'settings') {
+            const cfg = await api(`/sessions/${currentSession}/settings`);
+            document.getElementById('cfgBotName').value = cfg.botName || '';
+            document.getElementById('cfgOwnerName').value = cfg.ownerName || '';
+            document.getElementById('cfgOwnerNumber').value = cfg.ownerNumber || '';
+            document.getElementById('cfgEmoji').value = cfg.emoji || '';
+            document.getElementById('cfgPrefix').value = cfg.prefix || '.';
+            document.getElementById('cfgLogo').value = cfg.logo || '';
+            document.getElementById('cfgLogoConnect').value = cfg.logoConnect || '';
+            document.getElementById('cfgLogoWelcome').value = cfg.logoWelcome || '';
+            document.getElementById('cfgLogoGoodbye').value = cfg.logoGoodbye || '';
+        }
+    } catch (err) {
+        toast('Erreur : ' + err.message, 'error');
+    }
+}
+
+/* ============ COMMANDES ============ */
+function renderCommands(list) {
+    const el = document.getElementById('commandsList');
+    if (!list.length) {
+        el.innerHTML = `<div class="empty" style="grid-column:1/-1;"><i class="fas fa-terminal"></i>Aucune commande chargée</div>`;
+        return;
+    }
+    el.innerHTML = list.map(c => `
+        <div class="command-item">
+            <div class="ci-name">!${escapeHtml(c.name)}</div>
+            <div class="ci-desc">${escapeHtml(c.description || 'Pas de description')}</div>
+            <span class="ci-cat">${escapeHtml(c.category || 'general')}</span>
+        </div>
+    `).join('');
+}
+
+function filterCommands() {
+    const term = document.getElementById('commandSearch').value.toLowerCase();
+    renderCommands(allCommands.filter(c =>
+        (c.name + ' ' + (c.description || '')).toLowerCase().includes(term)
+    ));
+}
+
+/* ============ CRÉER SESSION ============ */
+async function createSession() {
+    const phone = document.getElementById('newPhone').value.trim();
+    const method = document.getElementById('newMethod').value;
+    if (!phone) return toast('Numéro requis', 'error');
+    const resultEl = document.getElementById('pairResult');
+    resultEl.innerHTML = `<div class="qr-box"><i class="fas fa-spinner fa-spin"></i> Connexion en cours...</div>`;
+    try {
+        if (method === 'qr') {
+            const res = await api('/sessions/qr', { method: 'POST', body: JSON.stringify({ phone }) });
+            resultEl.innerHTML = `
+                <div class="qr-box">
+                    <img src="${res.qr}" alt="QR Code">
+                    <p style="margin-top:12px; font-size:0.82rem; color:var(--text-muted);">Scannez avec WhatsApp</p>
+                </div>`;
+        } else {
+            const res = await api('/sessions/pairing', { method: 'POST', body: JSON.stringify({ phone }) });
+            resultEl.innerHTML = `
+                <div class="code-box">${res.code}</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); text-align:center;">Entrez ce code dans WhatsApp → Appareils connectés</p>`;
+        }
+        setTimeout(refreshAll, 4000);
+    } catch (err) {
+        resultEl.innerHTML = `<div class="qr-box" style="border-color:var(--danger); color:var(--danger);">
+            <i class="fas fa-exclamation-circle"></i> ${escapeHtml(err.message)}
+        </div>`;
+    }
+}
+
+/* ============ SUPPRIMER SESSION ============ */
+function deleteCurrentSession() {
+    if (!currentSession) return toast('Aucune session sélectionnée', 'error');
+    document.getElementById('confirmSessionName').textContent = currentSession;
+    document.getElementById('confirmModal').classList.add('active');
+}
+
+function closeConfirm() {
+    document.getElementById('confirmModal').classList.remove('active');
+}
+
+async function confirmDelete() {
+    closeConfirm();
+    try {
+        await api(`/sessions/${currentSession}`, { method: 'DELETE' });
+        toast('Session supprimée', 'success');
+        currentSession = null;
+        refreshAll();
+    } catch (err) {
+        toast(err.message, 'error');
+    }
+}
+
+/* ============ SAUVEGARDER PARAMÈTRES ============ */
+async function saveSettings() {
+    const body = {
+        botName: document.getElementById('cfgBotName').value.trim(),
+        ownerName: document.getElementById('cfgOwnerName').value.trim(),
+        ownerNumber: document.getElementById('cfgOwnerNumber').value.trim(),
+        emoji: document.getElementById('cfgEmoji').value.trim(),
+        prefix: document.getElementById('cfgPrefix').value.trim() || '.',
+        logo: document.getElementById('cfgLogo').value.trim(),
+        logoConnect: document.getElementById('cfgLogoConnect').value.trim(),
+        logoWelcome: document.getElementById('cfgLogoWelcome').value.trim(),
+        logoGoodbye: document.getElementById('cfgLogoGoodbye').value.trim()
+    };
+    try {
+        await api(`/sessions/${currentSession}/settings`, { method: 'POST', body: JSON.stringify(body) });
+        toast('Paramètres sauvegardés', 'success');
+        refreshAll();
+    } catch (err) {
+        toast(err.message, 'error');
+    }
+}
+
+/* ============ ESCAPE HTML ============ */
+function escapeHtml(t) {
+    const d = document.createElement('div');
+    d.textContent = t ?? '';
+    return d.innerHTML;
+}
+
+/* ============ INIT ============ */
+(async function init() {
+    try {
+        await loadSessionsList();
+        document.querySelectorAll('#cmdSessionLabel, #logSessionLabel, #cfgSessionLabel, #qrSessionLabel')
+            .forEach(el => el.textContent = currentSession || '—');
+        loadPageData('dashboard');
+        setInterval(refreshAll, 15000);
+    } catch (err) {
+        toast('Erreur de connexion au serveur', 'error');
+    }
+})();
+</script>
+
+<!-- Modale Confirmation Suppression -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle" style="color: var(--danger); margin-right: 8px;"></i>Confirmer la suppression</h3>
+            <button class="modal-close" onclick="closeConfirm()">&times;</button>
+        </div>
+        <div class="modal-body" style="text-align: left;">
+            <p style="margin-bottom: 14px; color: var(--text-soft);">
+                Voulez-vous vraiment supprimer la session <strong id="confirmSessionName" style="color: var(--text);"></strong> ?
+            </p>
+            <div style="background: rgba(239,68,68,0.08); border-left: 3px solid var(--danger); padding: 12px 14px; border-radius: 6px; margin-bottom: 18px;">
+                <p style="font-size: 0.85rem; color: var(--danger); margin: 0;">
+                    <i class="fas fa-info-circle"></i> Cette action est <strong>irréversible</strong>. Toutes les données de cette session seront perdues.
+                </p>
+            </div>
+            <button class="btn btn-danger" onclick="confirmDelete()" style="width: 100%;">
+                <i class="fas fa-trash"></i> Oui, supprimer
+            </button>
+            <button class="btn btn-outline" onclick="closeConfirm()" style="width: 100%; margin-top: 8px;">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
