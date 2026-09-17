@@ -30,3 +30,5 @@ bot.log
 server.log
 core
 core.*
+.pwa-widget.html
+patch-pwa-widget.js
