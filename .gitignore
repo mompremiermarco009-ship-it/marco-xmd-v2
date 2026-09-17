@@ -32,3 +32,4 @@ core
 core.*
 .pwa-widget.html
 patch-pwa-widget.js
+server.js.bak
