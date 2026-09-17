@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.onrender.marco_xmd_v2.twa",
+        "sha256_cert_fingerprints": ["56:3C:BE:A9:8B:68:47:0A:7A:D6:50:97:85:83:49:C0:D2:C7:F9:3B:30:BC:39:D5:46:47:13:45:39:C0:E5:CC"]
+      }
+    }]

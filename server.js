@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(express.json({ limit: "5kb" }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), { dotfiles: "allow" }));
 
 // Dashboard admin (sessions, commandes, logs, paramètres)
 app.use("/api/admin", require("./admin-routes.js"));
