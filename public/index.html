@@ -1106,213 +1106,33 @@
         </div>
     </section>
 
-    <!-- Notification -->
-    <div class="notice">
+    <!-- Notification dynamique -->
+    <div class="notice" id="marco-notice">
         <div class="notice-icon"><i class="fas fa-check-circle"></i></div>
         <div class="notice-content">
-            <h3>Mise à jour terminée ✨</h3>
-            <p>
-                MARCO-XMD a été entièrement <span class="highlight">optimisé et allégé</span> pour offrir 
-                de meilleures performances face aux <span class="highlight">nouvelles restrictions de WhatsApp</span>. 
-                Le bot est désormais <span class="highlight">plus rapide, plus léger et plus stable</span>. 
+            <h3 data-i18n="notice.updated.title">Dernière mise à jour</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin:6px 0 10px 0; font-size:0.85rem;">
+                <span style="display:inline-flex; align-items:center; gap:6px; background:rgba(139,0,0,0.1); padding:4px 10px; border-radius:999px; color:var(--text-soft);">
+                    <i class="fas fa-calendar-alt" style="color:var(--primary);"></i>
+                    <span id="marco-last-update">Chargement...</span>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.1); padding:4px 10px; border-radius:999px; color:var(--text-soft);" id="marco-status-chip">
+                    <span id="marco-status-dot" style="width:8px; height:8px; border-radius:50%; background:#f59e0b; display:inline-block;"></span>
+                    <span id="marco-status-text">Vérification...</span>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:6px; background:rgba(59,130,246,0.1); padding:4px 10px; border-radius:999px; color:var(--text-soft);" id="marco-latency-chip">
+                    <i class="fas fa-bolt" style="color:#3b82f6;"></i>
+                    <span id="marco-latency">-- ms</span>
+                </span>
+            </div>
+            <p data-i18n="notice.updated.text">
+                MARCO-XMD a été entièrement <span class="highlight">optimisé et allégé</span> pour offrir
+                de meilleures performances face aux <span class="highlight">nouvelles restrictions de WhatsApp</span>.
+                Le bot est désormais <span class="highlight">plus rapide, plus léger et plus stable</span>.
                 De <span class="highlight">nouvelles commandes</span> seront ajoutées progressivement.
             </p>
         </div>
     </div>
-
-
-
-    <!-- ===== MARCO SMART CTA (APK <-> WEB) ===== -->
-    <section class="section" id="marco-smart-cta">
-        <!-- Vue WEB : telecharger l'APK -->
-        <div id="marco-cta-web" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(22, 163, 74, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
-            <div style="font-size: 44px; margin-bottom: 12px;">&#128241;</div>
-            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;">Telecharger l'application</h3>
-            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;">Telecharger l'application directement sur votre telephone</p>
-            <a href="/apk/MARCO-XMD.apk" download="MARCO-XMD.apk" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);">
-                <span style="font-size: 20px;">&#11015;&#65039;</span>
-                <span>Telecharger l'APK</span>
-                <span style="font-size: 11px; opacity: 0.85; font-weight: 400;">(4.7 Mo)</span>
-            </a>
-            <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128274; Fichier signe &bull; Compatible Android 6.0+</p>
-        </div>
-
-        <!-- Vue APP : acceder au site web -->
-        <div id="marco-cta-app" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
-            <div style="font-size: 44px; margin-bottom: 12px;">&#127760;</div>
-            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;">Acceder au site web</h3>
-            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
-            <a href="https://marco-xmd-v2.onrender.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);">
-                <span style="font-size: 20px;">&#127760;</span>
-                <span>Acceder au site</span>
-            </a>
-            <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128241; Version web officielle &bull; Toujours a jour</p>
-        </div>
-    </section>
-
-    <script>
-    (function(){
-        // Detecter si on est dans l'application (mode standalone / TWA)
-        var isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                        || window.navigator.standalone === true
-                        || document.referrer.indexOf('android-app://') === 0;
-
-        var webEl = document.getElementById('marco-cta-web');
-        var appEl = document.getElementById('marco-cta-app');
-
-        if (isStandalone) {
-            // On est dans l'app -> proposer d'ouvrir le site
-            if (appEl) appEl.style.display = 'block';
-            if (webEl) webEl.style.display = 'none';
-        } else {
-            // On est sur le web -> proposer de telecharger l'app
-            if (webEl) webEl.style.display = 'block';
-            if (appEl) appEl.style.display = 'none';
-        }
-    })();
-    </script>
-    <!-- ===== FIN MARCO SMART CTA ===== -->
-
-    <!-- Outils disponibles -->
-    <section class="section">
-        <div class="section-header">
-            <h2><i class="fas fa-toolbox"></i> Outils disponibles</h2>
-            <p>Découvrez nos outils gratuits et instantanés</p>
-        </div>
-        <div class="tools-grid">
-            <a class="tool-card" href="/video_downloader/">
-                <div class="tool-icon blue"><i class="fas fa-download"></i></div>
-                <div class="tool-info">
-                    <h3>Video Downloader</h3>
-                    <p>Téléchargez des vidéos et audios depuis YouTube, Facebook, Instagram et TikTok.</p>
-                </div>
-                <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
-            </a>
-            <a class="tool-card" href="/marco_lyrics/">
-                <div class="tool-icon purple"><i class="fas fa-music"></i></div>
-                <div class="tool-info">
-                    <h3>Marco Lyrics</h3>
-                    <p>Trouvez les paroles de vos chansons préférées en quelques secondes.</p>
-                </div>
-                <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
-            </a>
-            <a class="tool-card" href="/voice_studio/">
-                <div class="tool-icon green"><i class="fas fa-wand-magic-sparkles"></i></div>
-                <div class="tool-info">
-                    <h3>Voice Studio</h3>
-                    <p>Convertissez votre texte en voix naturelle avec des voix françaises variées.</p>
-                </div>
-                <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
-            </a>
-            <a class="tool-card" href="/games.html">
-                <div class="tool-icon orange"><i class="fas fa-gamepad"></i></div>
-                <div class="tool-info">
-                    <h3>Mini-Jeux</h3>
-                    <p>Snake, Morpion, Pong, Memory et bien d'autres jeux à découvrir.</p>
-                </div>
-                <span class="tool-tag">Disponible</span>
-            </a>
-        </div>
-    </section>
-
-    <!-- Fonctionnalités -->
-    <section class="section">
-        <div class="section-header">
-            <h2><i class="fas fa-star"></i> Fonctionnalités</h2>
-            <p>Tout ce que MARCO-XMD peut faire pour vous</p>
-        </div>
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="ic-icon"><i class="fas fa-layer-group"></i></div>
-                <h3>Multi-Session</h3>
-                <p>Connectez plusieurs numéros WhatsApp depuis une seule interface, chacun avec sa propre configuration.</p>
-            </div>
-            <div class="info-card">
-                <div class="ic-icon"><i class="fas fa-bolt"></i></div>
-                <h3>Ultra Léger</h3>
-                <p>Un code optimisé qui consomme très peu de ressources tout en restant puissant.</p>
-            </div>
-            <div class="info-card">
-                <div class="ic-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3>Anti-Ban</h3>
-                <p>Protection renforcée contre les bans WhatsApp grâce à un design intelligent.</p>
-            </div>
-            <div class="info-card">
-                <div class="ic-icon"><i class="fas fa-server"></i></div>
-                <h3>Dashboard Web</h3>
-                <p>Gérez vos sessions, consultez les logs et configurez tout depuis une interface moderne.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Comment ça marche -->
-    <section class="section">
-        <div class="section-header">
-            <h2><i class="fas fa-route"></i> Comment ça marche</h2>
-            <p>Connectez votre bot en 3 étapes simples</p>
-        </div>
-        <div class="steps">
-            <div class="step">
-                <div class="step-num">1</div>
-                <h3>Cliquez sur "Connecter"</h3>
-                <p>Entrez votre numéro WhatsApp dans le formulaire qui s'ouvre.</p>
-            </div>
-            <div class="step">
-                <div class="step-num">2</div>
-                <h3>Choisissez la méthode</h3>
-                <p>Recevez un code d'appariement ou scannez un QR code.</p>
-            </div>
-            <div class="step">
-                <div class="step-num">3</div>
-                <h3>Entrez le code</h3>
-                <p>Dans WhatsApp → Appareils connectés → Relier un appareil.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section">
-        <div class="section-header">
-            <h2><i class="fas fa-question-circle"></i> Questions fréquentes</h2>
-            <p>Réponses aux questions les plus courantes</p>
-        </div>
-        <div class="faq-list">
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-question">
-                    <span>Est-ce que le bot est gratuit ?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">Oui, MARCO-XMD est 100% gratuit. Aucun frais caché, aucune limitation de durée.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-question">
-                    <span>Mon numéro risque-t-il un ban ?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">Le bot intègre des protections anti-détection et respecte les restrictions WhatsApp. Cependant, aucun bot n'est 100% sans risque. Utilisez un numéro secondaire de préférence.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-question">
-                    <span>Puis-je connecter plusieurs numéros ?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">Oui ! MARCO-XMD supporte le multi-session. Vous pouvez connecter autant de numéros que vous voulez, chacun aura sa propre configuration.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-question">
-                    <span>Où sont stockées mes données ?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">Toutes les données sont stockées localement sur votre serveur. Aucune information n'est transmise à des tiers. Les fichiers temporaires sont supprimés automatiquement.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-question">
-                    <span>Comment sont protégés mes fichiers ?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">Chaque fichier téléchargé ou généré a un lien unique et temporaire. Il est supprimé automatiquement après 30 minutes. Personne d'autre n'y a accès.</div>
-            </div>
-        </div>
     </section>
 
     <!-- CTA -->
@@ -2241,6 +2061,82 @@ window.addEventListener('keydown', (e) => {
     var lang = (window.marcoI18n && window.marcoI18n.getLang && window.marcoI18n.getLang()) || 'fr';
     document.dispatchEvent(new CustomEvent('marco-lang-change', { detail: { lang: lang } }));
   });
+})();
+</script>
+
+<script>
+(function(){
+  // ─── GitHub : date du dernier commit ───
+  function loadLastUpdate() {
+    var el = document.getElementById('marco-last-update');
+    if (!el) return;
+    fetch('https://api.github.com/repos/mompremiermarco009-ship-it/marco-xmd-v2/commits/main')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (data && data.commit && data.commit.committer) {
+          var d = new Date(data.commit.committer.date);
+          var opts = { day: '2-digit', month: '2-digit', year: 'numeric' };
+          el.textContent = d.toLocaleDateString('fr-FR', opts);
+        } else {
+          el.textContent = '—';
+        }
+      })
+      .catch(function(){ el.textContent = '—'; });
+  }
+
+  // ─── API locale : status + latence ───
+  function fetchMarcoStatus() {
+    var dot = document.getElementById('marco-status-dot');
+    var txt = document.getElementById('marco-status-text');
+    var lat = document.getElementById('marco-latency');
+    if (!txt) return;
+
+    var t0 = Date.now();
+    fetch('/api/marco-status', { cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var ping = Date.now() - t0;
+        if (lat) lat.textContent = ping + ' ms';
+
+        var lang = (window.marcoI18n && window.marcoI18n.getLang()) || 'fr';
+        var labels = {
+          fr: { online: 'En ligne', idle: 'Aucune session', starting: 'Démarrage...', error: 'Erreur', offline: 'Hors ligne' },
+          ht: { online: 'An liy', idle: 'Pa gen sesyon', starting: 'Ap kòmanse...', error: 'Erè', offline: 'Dekonekte' },
+          en: { online: 'Online', idle: 'No session', starting: 'Starting...', error: 'Error', offline: 'Offline' }
+        };
+        var L = labels[lang] || labels.fr;
+
+        if (data.online) {
+          if (dot) dot.style.background = '#10b981';
+          if (txt) txt.textContent = L.online + ' • ' + data.readySessions + ' session' + (data.readySessions > 1 ? 's' : '');
+        } else if (data.status === 'idle') {
+          if (dot) dot.style.background = '#9ca3af';
+          if (txt) txt.textContent = L.idle;
+        } else if (data.status === 'starting') {
+          if (dot) dot.style.background = '#f59e0b';
+          if (txt) txt.textContent = L.starting;
+        } else {
+          if (dot) dot.style.background = '#9ca3af';
+          if (txt) txt.textContent = L.idle;
+        }
+      })
+      .catch(function(){
+        if (dot) dot.style.background = '#ef4444';
+        if (txt) txt.textContent = 'Hors ligne';
+        if (lat) lat.textContent = '-- ms';
+      });
+  }
+
+  // Charger au demarrage
+  document.addEventListener('DOMContentLoaded', function(){
+    loadLastUpdate();
+    fetchMarcoStatus();
+    // Rafraichir toutes les 60s
+    setInterval(fetchMarcoStatus, 60000);
+  });
+
+  // Reagir aux changements de langue
+  document.addEventListener('marco-lang-change', function(){ fetchMarcoStatus(); });
 })();
 </script>
 </body>
