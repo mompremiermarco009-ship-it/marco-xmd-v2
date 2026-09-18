@@ -14,38 +14,7 @@ app.use("/api/admin", require("./admin-routes.js"));
 const startServer = (startBotFunc, sessionsMap) => {
     // Page principale
     app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
-
-    // ---------- Ping (mesure de latence) ----------
-    app.get("/api/marco-ping", (req, res) => {
-        res.json({ pong: true, t: Date.now() });
-    });
-
-    // ---------- Status du bot (API publique) ----------
-    app.get("/api/marco-status", (req, res) => {
-        try {
-            let activeSessions = 0;
-            let readySessions = 0;
-            if (sessionsMap && typeof sessionsMap.forEach === "function") {
-                sessionsMap.forEach((sess) => {
-                    activeSessions++;
-                    if (sess && sess.isReady) readySessions++;
-                });
-            }
-            res.json({
-                status: readySessions > 0 ? "online" : (activeSessions > 0 ? "starting" : "idle"),
-                online: readySessions > 0,
-                activeSessions: activeSessions,
-                readySessions: readySessions,
-                uptime: Math.floor(process.uptime()),
-                version: config.version,
-                botName: config.botName,
-                timestamp: Date.now()
-            });
-        } catch (err) {
-            res.status(500).json({ status: "error", message: err.message });
-        }
-    });
-
+    
     // ---------- Pairing code ----------
     app.get("/pair", async (req, res) => {
         let num = req.query.number;

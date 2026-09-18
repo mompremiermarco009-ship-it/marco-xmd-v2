@@ -225,4 +225,48 @@ router.post('/sessions/:id/settings', (req, res) => {
     res.json({ success: true });
 });
 
+// ---------- Status global du bot (ADMIN uniquement) ----------
+router.get('/status', (req, res) => {
+    try {
+        const sessionsMap = getSessionsMap();
+        let activeSessions = 0;
+        let readySessions = 0;
+
+        if (sessionsMap && typeof sessionsMap.forEach === 'function') {
+            sessionsMap.forEach((sess) => {
+                activeSessions++;
+                if (sess && sess.isReady) readySessions++;
+            });
+        }
+
+        // Config globale
+        let config = {};
+        try {
+            config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf-8'));
+        } catch (e) {}
+
+        res.json({
+            ok: true,
+            status: readySessions > 0 ? 'online' : (activeSessions > 0 ? 'starting' : 'idle'),
+            online: readySessions > 0,
+            activeSessions: activeSessions,
+            readySessions: readySessions,
+            uptime: Math.floor(process.uptime()),
+            version: config.version || '2.0.0',
+            botName: config.botName || 'MARCO-XMD',
+            timestamp: Date.now(),
+            memory: process.memoryUsage(),
+            node: process.version,
+            platform: process.platform
+        });
+    } catch (err) {
+        res.status(500).json({ ok: false, error: err.message });
+    }
+});
+
+// ---------- Ping admin (mesure de latence) ----------
+router.get('/ping', (req, res) => {
+    res.json({ ok: true, pong: true, t: Date.now() });
+});
+
 module.exports = router;
