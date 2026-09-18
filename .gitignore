@@ -37,3 +37,4 @@ signing.keystore
 signing-key-info.txt
 patch-apk-inline.js
 patch-download-apk.js
+disable-*.js

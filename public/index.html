@@ -962,6 +962,16 @@
     <meta name="apple-mobile-web-app-title" content="MARCO-XMD">
     <link rel="apple-touch-icon" href="/media/logo192.png">
 <style>/* marco-pwa-hide-old */ #pwa-install-container { display: none !important; }</style>
+<style id="marco-pwa-widget-disabled">
+/* Widget PWA flottant temporairement desactive
+   Pour le reactiver : supprimer ce bloc <style> */
+#marco-pwa-widget {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+</style>
 </head>
 <body>
 
@@ -1093,12 +1103,15 @@
         </div>
     </div>
 
-    <!-- ===== MARCO APK DOWNLOAD SECTION ===== -->
-    <section class="section" id="apk-download-section">
-        <div style="background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(22, 163, 74, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
+
+
+    <!-- ===== MARCO SMART CTA (APK <-> WEB) ===== -->
+    <section class="section" id="marco-smart-cta">
+        <!-- Vue WEB : telecharger l'APK -->
+        <div id="marco-cta-web" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(22, 163, 74, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
             <div style="font-size: 44px; margin-bottom: 12px;">&#128241;</div>
-            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;">Telecharger l'application Android</h3>
-            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;">Installez MARCO-XMD directement sur votre telephone — sans passer par le Play Store.</p>
+            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;">Telecharger l'application</h3>
+            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;">Telecharger l'application directement sur votre telephone</p>
             <a href="/apk/MARCO-XMD.apk" download="MARCO-XMD.apk" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);">
                 <span style="font-size: 20px;">&#11015;&#65039;</span>
                 <span>Telecharger l'APK</span>
@@ -1106,8 +1119,42 @@
             </a>
             <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128274; Fichier signe &bull; Compatible Android 6.0+</p>
         </div>
+
+        <!-- Vue APP : acceder au site web -->
+        <div id="marco-cta-app" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
+            <div style="font-size: 44px; margin-bottom: 12px;">&#127760;</div>
+            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;">Acceder au site web</h3>
+            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
+            <a href="https://marco-xmd-v2.onrender.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);">
+                <span style="font-size: 20px;">&#127760;</span>
+                <span>Acceder au site</span>
+            </a>
+            <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128241; Version web officielle &bull; Toujours a jour</p>
+        </div>
     </section>
-    <!-- ===== FIN MARCO APK DOWNLOAD SECTION ===== -->
+
+    <script>
+    (function(){
+        // Detecter si on est dans l'application (mode standalone / TWA)
+        var isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                        || window.navigator.standalone === true
+                        || document.referrer.indexOf('android-app://') === 0;
+
+        var webEl = document.getElementById('marco-cta-web');
+        var appEl = document.getElementById('marco-cta-app');
+
+        if (isStandalone) {
+            // On est dans l'app -> proposer d'ouvrir le site
+            if (appEl) appEl.style.display = 'block';
+            if (webEl) webEl.style.display = 'none';
+        } else {
+            // On est sur le web -> proposer de telecharger l'app
+            if (webEl) webEl.style.display = 'block';
+            if (appEl) appEl.style.display = 'none';
+        }
+    })();
+    </script>
+    <!-- ===== FIN MARCO SMART CTA ===== -->
 
     <!-- Outils disponibles -->
     <section class="section">
