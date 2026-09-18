@@ -986,17 +986,22 @@
             </div>
         </div>
         <div class="navbar-actions">
+            <div class="marco-lang-switcher" id="marco-lang-switcher">
+                <button class="marco-lang-btn" data-lang="ht" onclick="marcoI18n.setLang('ht')" title="Kreyòl Ayisyen">🇭🇹</button>
+                <button class="marco-lang-btn" data-lang="fr" onclick="marcoI18n.setLang('fr')" title="Français">🇫🇷</button>
+                <button class="marco-lang-btn" data-lang="en" onclick="marcoI18n.setLang('en')" title="English">🇺🇸</button>
+            </div>
             <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème" aria-label="Changer le thème">
                 <i class="fas fa-sun icon-sun"></i>
                 <i class="fas fa-moon icon-moon"></i>
             </button>
             <a class="nav-btn" href="/games.html">
                 <i class="fas fa-gamepad"></i>
-                <span>Jeux</span>
+                <span><span data-i18n="nav.games">Jeux</span></span>
             </a>
             <a class="nav-btn primary" href="#" onclick="openPairing(event)">
                 <i class="fas fa-key"></i>
-                <span>Connecter</span>
+                <span><span data-i18n="nav.connect">Connecter</span>
             </a>
             <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()" aria-label="Menu">
                 <span></span>
@@ -1009,44 +1014,44 @@
 
 <!-- Menu mobile -->
 <div class="mobile-menu" id="mobileMenu">
-    <div class="menu-section-title">Navigation</div>
+    <div class="menu-section-title"><span data-i18n="menu.section.nav">Navigation</span></div>
     <a href="/" onclick="closeMenu()">
-        <i class="fas fa-home"></i> Accueil
+        <i class="fas fa-home"></i> <span data-i18n="menu.home">Accueil</span>
     </a>
     <a href="/games.html" onclick="closeMenu()">
-        <i class="fas fa-gamepad"></i> Mini-jeux
+        <i class="fas fa-gamepad"></i> <span data-i18n="menu.games">Mini-jeux</span>
     </a>
     <a href="#" onclick="openPairing(event); closeMenu();">
-        <i class="fas fa-key"></i> Connecter un bot
+        <i class="fas fa-key"></i> <span data-i18n="menu.connect">Connecter un bot</span>
     </a>
 
     <div class="menu-divider"></div>
 
-    <div class="menu-section-title">Outils</div>
+    <div class="menu-section-title"><span data-i18n="menu.section.tools">Outils</span></div>
     <a href="/video_downloader/" onclick="closeMenu()">
-        <i class="fas fa-download"></i> Video Downloader
+        <i class="fas fa-download"></i> <span data-i18n="menu.video">Video Downloader</span>
     </a>
     <a href="/marco_lyrics/" onclick="closeMenu()">
-        <i class="fas fa-music"></i> Marco Lyrics
+        <i class="fas fa-music"></i> <span data-i18n="menu.lyrics">Marco Lyrics</span>
     </a>
     <a href="/voice_studio/" onclick="closeMenu()">
-        <i class="fas fa-wand-magic-sparkles"></i> Voice Studio
+        <i class="fas fa-wand-magic-sparkles"></i> <span data-i18n="menu.voice">Voice Studio</span>
     </a>
 
     <div class="menu-divider"></div>
 
-    <div class="menu-section-title">Informations</div>
+    <div class="menu-section-title"><span data-i18n="menu.section.info">Informations</span></div>
     <a href="/status" onclick="closeMenu()">
-        <i class="fas fa-signal"></i> Statut du bot
+        <i class="fas fa-signal"></i> <span data-i18n="menu.status">Statut du bot</span>
     </a>
     <a href="#" onclick="openAbout(event); closeMenu();">
-        <i class="fas fa-info-circle"></i> À propos
+        <i class="fas fa-info-circle"></i> <span data-i18n="menu.about">À propos</span>
     </a>
     <a href="#" onclick="openChangelog(event); closeMenu();">
-        <i class="fas fa-code-branch"></i> Mises à jour
+        <i class="fas fa-code-branch"></i> <span data-i18n="menu.changelog">Mises à jour</span>
     </a>
     <a href="#" onclick="openTerms(event); closeMenu();">
-        <i class="fas fa-file-contract"></i> Conditions d'utilisation
+        <i class="fas fa-file-contract"></i> <span data-i18n="menu.terms">Conditions d'utilisation</span>
     </a>
 
     <div class="menu-divider"></div>
@@ -1911,7 +1916,49 @@ window.addEventListener('keydown', (e) => {
   color: #fff; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
 }
 #marco-pwa-open:active { transform: scale(0.97); }
-</style>
+
+        /* ===== MARCO LANG SWITCHER ===== */
+        .marco-lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--surface-alt, rgba(0,0,0,0.04));
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 3px;
+            margin-right: 8px;
+        }
+        .marco-lang-btn {
+            background: transparent;
+            border: none;
+            border-radius: 999px;
+            width: 32px;
+            height: 28px;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+            opacity: 0.6;
+            padding: 0;
+            line-height: 1;
+        }
+        .marco-lang-btn:hover {
+            opacity: 1;
+            background: rgba(0,0,0,0.05);
+        }
+        .marco-lang-btn.active {
+            opacity: 1;
+            background: var(--primary, #8b0000);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        @media (max-width: 640px) {
+            .marco-lang-switcher { margin-right: 4px; }
+            .marco-lang-btn { width: 28px; height: 26px; font-size: 14px; }
+        }
+
+    </style>
 
 <div id="marco-pwa-widget" style="display:none;">
   <div class="mpw-row">
@@ -2057,5 +2104,8 @@ window.addEventListener('keydown', (e) => {
 </script>
 
 <!-- ===== FIN MARCO PWA WIDGET v2 ===== -->
+
+<script src="/translations.js"></script>
+<script src="/i18n.js"></script>
 </body>
 </html>
