@@ -1137,9 +1137,9 @@
             <div style="font-size: 44px; margin-bottom: 12px;">&#127760;</div>
             <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;" data-i18n="access.title">Acceder au site web</h3>
             <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="access.text">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
-            <a href="https://marco-xmd-v2.onrender.com/" data-marco-cta-open-external="1" onclick="marcoOpenExternal(event, 'https://marco-xmd-v2.onrender.com/'); return false;" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); cursor: pointer;">
+            <a href="https://tinyurl.com/ywfy4tyx" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);">
                 <span style="font-size: 20px;">&#127760;</span>
-                <span>Acceder au site</span>
+                <span data-i18n="access.button">Acceder au site</span>
             </a>
             <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128241; Version web officielle &bull; Toujours a jour</p>
         </div>
@@ -2253,28 +2253,6 @@ window.addEventListener('keydown', (e) => {
     .catch(function(){ el.textContent = '—'; });
 })();
 </script>
-<script>
-/* marcoOpenExternal - ouvre un lien dans Chrome hors de la TWA */
-function marcoOpenExternal(e, url) {
-  if (e) e.preventDefault();
-  var isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                  || window.navigator.standalone === true
-                  || document.referrer.indexOf('android-app://') === 0
-                  || window.location.protocol === 'android-app:';
-  if (isStandalone) {
-    try {
-      // Intent Android: force l'ouverture dans Chrome
-      var host = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      var intentUrl = 'intent://' + host + '/#Intent;scheme=https;package=com.android.chrome;end';
-      window.location.href = intentUrl;
-    } catch (err) {
-      window.open(url, '_system');
-    }
-  } else {
-    window.open(url, '_blank', 'noopener');
-  }
-  return false;
-}
-</script>
+
 </body>
 </html>
