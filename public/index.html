@@ -2195,5 +2195,53 @@ window.addEventListener('keydown', (e) => {
 
 <script src="/translations.js"></script>
 <script src="/i18n.js"></script>
+
+<script>
+(function(){
+  function toggleDropdown(e) {
+    if (e) e.stopPropagation();
+    var el = document.getElementById('marco-lang-dropdown');
+    if (el) el.classList.toggle('open');
+  }
+  function closeDropdown() {
+    var el = document.getElementById('marco-lang-dropdown');
+    if (el) el.classList.remove('open');
+  }
+  window.marcoLangToggle = toggleDropdown;
+  window.marcoLangClose = closeDropdown;
+
+  // Fermer en cliquant ailleurs
+  document.addEventListener('click', function(e) {
+    var el = document.getElementById('marco-lang-dropdown');
+    if (!el) return;
+    if (!el.contains(e.target)) closeDropdown();
+  });
+
+  // Mettre a jour le drapeau affiche + surlignage, a chaque changement
+  document.addEventListener('marco-lang-change', function(ev) {
+    var lang = ev.detail.lang;
+    var flags = { ht: '\uD83C\uDDED\uD83C\uDDF9', fr: '\uD83C\uDDEB\uD83C\uDDF7', en: '\uD83C\uDDFA\uD83C\uDDF8' };
+    var flag = flags[lang] || flags.fr;
+    var current = document.querySelector('#marco-lang-dropdown .marco-flag-current');
+    if (current) current.textContent = flag;
+
+    var opts = document.querySelectorAll('#marco-lang-dropdown .marco-lang-option');
+    for (var i = 0; i < opts.length; i++) {
+      opts[i].classList.toggle('active', opts[i].getAttribute('data-lang') === lang);
+    }
+
+    var rowBtns = document.querySelectorAll('#marco-lang-row button');
+    for (var j = 0; j < rowBtns.length; j++) {
+      rowBtns[j].classList.toggle('active', rowBtns[j].getAttribute('data-lang') === lang);
+    }
+  });
+
+  // Appliquer l'etat de langue au chargement
+  document.addEventListener('DOMContentLoaded', function() {
+    var lang = (window.marcoI18n && window.marcoI18n.getLang && window.marcoI18n.getLang()) || 'fr';
+    document.dispatchEvent(new CustomEvent('marco-lang-change', { detail: { lang: lang } }));
+  });
+})();
+</script>
 </body>
 </html>
