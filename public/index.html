@@ -1094,8 +1094,8 @@
     <!-- Hero -->
     <section class="hero">
         <img src="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png" alt="MARCO-XMD">
-        <h2>Bienvenue sur MARCO-XMD</h2>
-        <p class="hero-sub">
+        <h2 data-i18n="hero.title">Bienvenue sur MARCO-XMD</h2>
+        <p class="hero-sub" data-i18n="hero.subtitle">
             Un bot WhatsApp <strong>simple, rapide et fiable</strong> conçu pour rendre votre quotidien plus pratique.
             Multi-session, léger et optimisé pour un maximum de performance.
         </p>
@@ -1110,9 +1110,9 @@
     <div class="notice">
         <div class="notice-icon"><i class="fas fa-check-circle"></i></div>
         <div class="notice-content">
-            <h3>Dernière mise à jour — <span id="marco-last-update">chargement…</span></h3>
+            <h3><span data-i18n="notice.title">Dernière mise à jour</span> — <span id="marco-last-update">chargement…</span></h3>
             <p>
-                MARCO-XMD a été entièrement <span class="highlight">optimisé et allégé</span> pour offrir 
+                <span data-i18n="notice.text">MARCO-XMD a été entièrement optimisé et allégé pour offrir de meilleures performances face aux nouvelles restrictions de WhatsApp. Le bot est désormais plus rapide, plus léger et plus stable. De nouvelles commandes seront ajoutées progressivement.</span><span style="display:none;"> pour offrir 
                 de meilleures performances face aux <span class="highlight">nouvelles restrictions de WhatsApp</span>. 
                 Le bot est désormais <span class="highlight">plus rapide, plus léger et plus stable</span>. 
                 De <span class="highlight">nouvelles commandes</span> seront ajoutées progressivement.
@@ -1127,8 +1127,8 @@
         <!-- Vue WEB : telecharger l'APK -->
         <div id="marco-cta-web" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(22, 163, 74, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
             <div style="font-size: 44px; margin-bottom: 12px;">&#128241;</div>
-            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;">Telecharger l'application</h3>
-            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;">Telecharger l'application directement sur votre telephone</p>
+            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;" data-i18n="download.title">Telecharger l'application</h3>
+            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="download.text">Telecharger l'application directement sur votre telephone</p>
             <a href="/apk/MARCO-XMD.apk" download="MARCO-XMD.apk" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);">
                 <span style="font-size: 20px;">&#11015;&#65039;</span>
                 <span>Telecharger l'APK</span>
@@ -1140,8 +1140,8 @@
         <!-- Vue APP : acceder au site web -->
         <div id="marco-cta-app" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
             <div style="font-size: 44px; margin-bottom: 12px;">&#127760;</div>
-            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;">Acceder au site web</h3>
-            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
+            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;" data-i18n="access.title">Acceder au site web</h3>
+            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="access.text">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
             <a href="https://marco-xmd-v2.onrender.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);">
                 <span style="font-size: 20px;">&#127760;</span>
                 <span>Acceder au site</span>
@@ -1176,39 +1176,39 @@
     <!-- Outils disponibles -->
     <section class="section">
         <div class="section-header">
-            <h2><i class="fas fa-toolbox"></i> Outils disponibles</h2>
-            <p>Découvrez nos outils gratuits et instantanés</p>
+            <h2><i class="fas fa-toolbox"></i> <span data-i18n="tools.title">Outils disponibles</span></h2>
+            <p data-i18n="tools.subtitle">Découvrez nos outils gratuits et instantanés</p>
         </div>
         <div class="tools-grid">
             <a class="tool-card" href="/video_downloader/">
                 <div class="tool-icon blue"><i class="fas fa-download"></i></div>
                 <div class="tool-info">
-                    <h3>Video Downloader</h3>
-                    <p>Téléchargez des vidéos et audios depuis YouTube, Facebook, Instagram et TikTok.</p>
+                    <h3 data-i18n="tools.video.title">Video Downloader</h3>
+                    <p data-i18n="tools.video.desc">Téléchargez des vidéos et audios depuis YouTube, Facebook, Instagram et TikTok.</p>
                 </div>
                 <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
             </a>
             <a class="tool-card" href="/marco_lyrics/">
                 <div class="tool-icon purple"><i class="fas fa-music"></i></div>
                 <div class="tool-info">
-                    <h3>Marco Lyrics</h3>
-                    <p>Trouvez les paroles de vos chansons préférées en quelques secondes.</p>
+                    <h3 data-i18n="tools.lyrics.title">Marco Lyrics</h3>
+                    <p data-i18n="tools.lyrics.desc">Trouvez les paroles de vos chansons préférées en quelques secondes.</p>
                 </div>
                 <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
             </a>
             <a class="tool-card" href="/voice_studio/">
                 <div class="tool-icon green"><i class="fas fa-wand-magic-sparkles"></i></div>
                 <div class="tool-info">
-                    <h3>Voice Studio</h3>
-                    <p>Convertissez votre texte en voix naturelle avec des voix françaises variées.</p>
+                    <h3 data-i18n="tools.voice.title">Voice Studio</h3>
+                    <p data-i18n="tools.voice.desc">Convertissez votre texte en voix naturelle avec des voix françaises variées.</p>
                 </div>
                 <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
             </a>
             <a class="tool-card" href="/games.html">
                 <div class="tool-icon orange"><i class="fas fa-gamepad"></i></div>
                 <div class="tool-info">
-                    <h3>Mini-Jeux</h3>
-                    <p>Snake, Morpion, Pong, Memory et bien d'autres jeux à découvrir.</p>
+                    <h3 data-i18n="tools.games.title">Mini-Jeux</h3>
+                    <p data-i18n="tools.games.desc">Snake, Morpion, Pong, Memory et bien d'autres jeux à découvrir.</p>
                 </div>
                 <span class="tool-tag">Disponible</span>
             </a>
@@ -1218,29 +1218,29 @@
     <!-- Fonctionnalités -->
     <section class="section">
         <div class="section-header">
-            <h2><i class="fas fa-star"></i> Fonctionnalités</h2>
-            <p>Tout ce que MARCO-XMD peut faire pour vous</p>
+            <h2><i class="fas fa-star"></i> <span data-i18n="features.title">Fonctionnalités</span></h2>
+            <p data-i18n="features.subtitle">Tout ce que MARCO-XMD peut faire pour vous</p>
         </div>
         <div class="info-grid">
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-layer-group"></i></div>
-                <h3>Multi-Session</h3>
-                <p>Connectez plusieurs numéros WhatsApp depuis une seule interface, chacun avec sa propre configuration.</p>
+                <h3 data-i18n="features.multisession.title">Multi-Session</h3>
+                <p data-i18n="features.multisession.desc">Connectez plusieurs numéros WhatsApp depuis une seule interface, chacun avec sa propre configuration.</p>
             </div>
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-bolt"></i></div>
-                <h3>Ultra Léger</h3>
-                <p>Un code optimisé qui consomme très peu de ressources tout en restant puissant.</p>
+                <h3 data-i18n="features.light.title">Ultra Léger</h3>
+                <p data-i18n="features.light.desc">Un code optimisé qui consomme très peu de ressources tout en restant puissant.</p>
             </div>
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3>Anti-Ban</h3>
-                <p>Protection renforcée contre les bans WhatsApp grâce à un design intelligent.</p>
+                <h3 data-i18n="features.antiban.title">Anti-Ban</h3>
+                <p data-i18n="features.antiban.desc">Protection renforcée contre les bans WhatsApp grâce à un design intelligent.</p>
             </div>
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-server"></i></div>
-                <h3>Dashboard Web</h3>
-                <p>Gérez vos sessions, consultez les logs et configurez tout depuis une interface moderne.</p>
+                <h3 data-i18n="features.dashboard.title">Dashboard Web</h3>
+                <p data-i18n="features.dashboard.desc">Gérez vos sessions, consultez les logs et configurez tout depuis une interface moderne.</p>
             </div>
         </div>
     </section>
@@ -1248,24 +1248,24 @@
     <!-- Comment ça marche -->
     <section class="section">
         <div class="section-header">
-            <h2><i class="fas fa-route"></i> Comment ça marche</h2>
-            <p>Connectez votre bot en 3 étapes simples</p>
+            <h2><i class="fas fa-route"></i> <span data-i18n="how.title">Comment ça marche</span></h2>
+            <p data-i18n="how.subtitle">Connectez votre bot en 3 étapes simples</p>
         </div>
         <div class="steps">
             <div class="step">
                 <div class="step-num">1</div>
-                <h3>Cliquez sur "Connecter"</h3>
-                <p>Entrez votre numéro WhatsApp dans le formulaire qui s'ouvre.</p>
+                <h3 data-i18n="how.step1.title">Cliquez sur "Connecter"</h3>
+                <p data-i18n="how.step1.desc">Entrez votre numéro WhatsApp dans le formulaire qui s'ouvre.</p>
             </div>
             <div class="step">
                 <div class="step-num">2</div>
-                <h3>Choisissez la méthode</h3>
-                <p>Recevez un code d'appariement ou scannez un QR code.</p>
+                <h3 data-i18n="how.step2.title">Choisissez la méthode</h3>
+                <p data-i18n="how.step2.desc">Recevez un code d'appariement ou scannez un QR code.</p>
             </div>
             <div class="step">
                 <div class="step-num">3</div>
-                <h3>Entrez le code</h3>
-                <p>Dans WhatsApp → Appareils connectés → Relier un appareil.</p>
+                <h3 data-i18n="how.step3.title">Entrez le code</h3>
+                <p data-i18n="how.step3.desc">Dans WhatsApp → Appareils connectés → Relier un appareil.</p>
             </div>
         </div>
     </section>
@@ -1273,8 +1273,8 @@
     <!-- FAQ -->
     <section class="section">
         <div class="section-header">
-            <h2><i class="fas fa-question-circle"></i> Questions fréquentes</h2>
-            <p>Réponses aux questions les plus courantes</p>
+            <h2><i class="fas fa-question-circle"></i> <span data-i18n="faq.title">Questions fréquentes</span></h2>
+            <p data-i18n="faq.subtitle">Réponses aux questions les plus courantes</p>
         </div>
         <div class="faq-list">
             <div class="faq-item" onclick="toggleFaq(this)">
@@ -1317,8 +1317,8 @@
 
     <!-- CTA -->
     <section class="cta-section">
-        <h2>Prêt à démarrer ?</h2>
-        <p>Connectez votre premier bot WhatsApp en moins d'une minute.</p>
+        <h2 data-i18n="cta.title">Prêt à démarrer ?</h2>
+        <p data-i18n="cta.text">Connectez votre premier bot WhatsApp en moins d'une minute.</p>
         <a class="cta-btn" href="#" onclick="openPairing(event)">
             <i class="fas fa-key"></i> Connecter maintenant
         </a>
@@ -1327,8 +1327,8 @@
     <!-- Support -->
     <section class="section">
         <div class="section-header">
-            <h2><i class="fas fa-headset"></i> Support & Contact</h2>
-            <p>Une question ? Une suggestion ? Nous sommes là pour vous aider</p>
+            <h2><i class="fas fa-headset"></i> <span data-i18n="support.title">Support & Contact</span></h2>
+            <p data-i18n="support.subtitle">Une question ? Une suggestion ? Nous sommes là pour vous aider</p>
         </div>
         <div class="support-grid">
             <a class="support-card wa" href="https://wa.me/50931677778" target="_blank">
