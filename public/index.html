@@ -1110,7 +1110,7 @@
     <div class="notice">
         <div class="notice-icon"><i class="fas fa-check-circle"></i></div>
         <div class="notice-content">
-            <h3>Mise à jour terminée ✨</h3>
+            <h3>Dernière mise à jour — <span id="marco-last-update">chargement…</span></h3>
             <p>
                 MARCO-XMD a été entièrement <span class="highlight">optimisé et allégé</span> pour offrir 
                 de meilleures performances face aux <span class="highlight">nouvelles restrictions de WhatsApp</span>. 
@@ -2241,6 +2241,21 @@ window.addEventListener('keydown', (e) => {
     var lang = (window.marcoI18n && window.marcoI18n.getLang && window.marcoI18n.getLang()) || 'fr';
     document.dispatchEvent(new CustomEvent('marco-lang-change', { detail: { lang: lang } }));
   });
+})();
+</script>
+<script>/* marco-last-update-script */
+(function(){
+  var el = document.getElementById('marco-last-update');
+  if (!el) return;
+  fetch('https://api.github.com/repos/mompremiermarco009-ship-it/marco-xmd-v2/commits/main')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data && data.commit && data.commit.committer) {
+        var d = new Date(data.commit.committer.date);
+        el.textContent = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      } else { el.textContent = '—'; }
+    })
+    .catch(function(){ el.textContent = '—'; });
 })();
 </script>
 </body>
