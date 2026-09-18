@@ -112,10 +112,39 @@ async function searchLyricsOvh(title, artist = '') {
     return null;
 }
 
+// Choisit le meilleur resultat parmi une liste de candidats lrclib
+function pickBestLyrics(candidates) {
+    if (!Array.isArray(candidates) || candidates.length === 0) return null;
+
+    const scored = candidates.map(function(item) {
+        var plain = (item.plainLyrics || '').trim();
+        var synced = (item.syncedLyrics || '').trim();
+        var text = plain || synced.replace(/\[\d{2}:\d{2}[.:]\d{2,3}\]/g, '').trim();
+        var len = text.length;
+        var lines = text.split(/\r?\n/).filter(function(l) { return l.trim().length > 0; }).length;
+        var hasDuration = item.duration && item.duration > 30;
+        var score = 0;
+        score += len;
+        score += lines * 20;
+        if (hasDuration) score += 100;
+        if (item.instrumental) score -= 5000;
+        return { item: item, text: text, score: score, len: len, lines: lines };
+    });
+
+    scored.sort(function(a, b) { return b.score - a.score; });
+
+    var best = scored[0];
+    if (best && best.len > 200) {
+        console.log('   -> Meilleur resultat : ' + best.len + ' chars, ' + best.lines + ' lignes');
+        return best.text;
+    }
+    if (best && best.len > 20) return best.text;
+    return null;
+}
+
 async function searchLrclib(title, artist = '') {
     const titleVariants = generateVariants(title);
     const artistVariants = artist ? [artist, normalizeText(artist)] : [''];
-
     const queries = [];
     for (const art of artistVariants) {
         for (const tit of titleVariants) {
@@ -130,11 +159,9 @@ async function searchLrclib(title, artist = '') {
         try {
             const res = await axios.get(url, { timeout: 12000 });
             if (Array.isArray(res.data) && res.data.length > 0) {
-                const best = res.data[0];
-                if (best.plainLyrics && best.plainLyrics.length > 20) return best.plainLyrics;
-                if (best.syncedLyrics && best.syncedLyrics.length > 20) {
-                    return best.syncedLyrics.replace(/\[\d{2}:\d{2}\.\d{2}\]/g, '').trim();
-                }
+                console.log('   lrclib: ' + res.data.length + ' resultats pour: ' + url.slice(0, 80));
+                const lyrics = pickBestLyrics(res.data);
+                if (lyrics) return lyrics;
             }
         } catch {}
     }
