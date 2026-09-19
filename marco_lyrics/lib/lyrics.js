@@ -142,6 +142,35 @@ function pickBestLyrics(candidates) {
     return null;
 }
 
+// Verifie si le resultat lrclib correspond au titre + artiste cibles
+function matchesTitleArtist(item, targetTitle, targetArtist) {
+    if (!item) return false;
+    const itemTitle = normalizeText(item.trackName || '');
+    const itemArtist = normalizeText(item.artistName || '');
+    const tTitle = normalizeText(targetTitle || '');
+    const tArtist = normalizeText(targetArtist || '');
+
+    if (!itemTitle || !tTitle) return false;
+
+    // Le titre doit matcher (l'un contient l'autre)
+    const titleMatch = itemTitle === tTitle
+                    || itemTitle.includes(tTitle)
+                    || tTitle.includes(itemTitle);
+
+    if (!titleMatch) return false;
+
+    // Si on a un artiste cible, il doit matcher aussi
+    if (tArtist) {
+        const artistMatch = itemArtist === tArtist
+                         || itemArtist.includes(tArtist)
+                         || tArtist.includes(itemArtist)
+                         || itemArtist.indexOf(tArtist.split(' ')[0]) !== -1;
+        if (!artistMatch) return false;
+    }
+
+    return true;
+}
+
 async function searchLrclib(title, artist = '') {
     const titleVariants = generateVariants(title);
     const artistVariants = artist ? [artist, normalizeText(artist)] : [''];
@@ -154,16 +183,48 @@ async function searchLrclib(title, artist = '') {
     }
 
     const uniqueQueries = [...new Set(queries)];
+    const targetTitle = title;
+    const targetArtist = artist;
 
     for (const url of uniqueQueries) {
         try {
             const res = await axios.get(url, { timeout: 12000 });
+            if (!Array.isArray(res.data) || res.data.length === 0) continue;
+
+            console.log('   lrclib: ' + res.data.length + ' resultats pour: ' + url.slice(0, 80));
+
+            // NOUVELLE LOGIQUE : prendre le PREMIER resultat qui matche titre + artiste
+            var matched = null;
+            for (var i = 0; i < res.data.length; i++) {
+                var item = res.data[i];
+                if (item.instrumental) continue;
+                if (matchesTitleArtist(item, targetTitle, targetArtist)) {
+                    matched = item;
+                    console.log('   -> Match #' + i + ' : "' + item.trackName + '" par "' + item.artistName + '" (' + (item.duration || '?') + 's)');
+                    break;
+                }
+            }
+
+            if (matched) {
+                var text = (matched.plainLyrics || '').trim();
+                if (!text && matched.syncedLyrics) {
+                    text = matched.syncedLyrics.replace(/\[\d{2}:\d{2}[.:]\d{2,3}\]/g, '').trim();
+                }
+                if (text && text.length > 100) return text;
+            }
+        } catch (err) {}
+    }
+
+    // Fallback : si aucun match exact, utiliser le scoring precedent
+    console.log('   lrclib: aucun match exact, fallback scoring');
+    for (const url of uniqueQueries) {
+        try {
+            const res = await axios.get(url, { timeout: 12000 });
             if (Array.isArray(res.data) && res.data.length > 0) {
-                console.log('   lrclib: ' + res.data.length + ' resultats pour: ' + url.slice(0, 80));
-                const lyrics = pickBestLyrics(res.data);
+                var lyrics = pickBestLyrics(res.data);
                 if (lyrics) return lyrics;
             }
-        } catch {}
+        } catch (err) {}
     }
     return null;
 }
