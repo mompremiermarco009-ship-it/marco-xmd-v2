@@ -18,3 +18,5 @@ services:
         value: 10000
       - key: VOICE_PORT
         value: 5001
+      - key: ADMIN_CODE
+        sync: false

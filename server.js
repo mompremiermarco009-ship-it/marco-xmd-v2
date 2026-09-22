@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const crypto = require("crypto");
 const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
 const config = require("./config.json");
@@ -7,6 +8,8 @@ const config = require("./config.json");
 const app = express();
 const PORT = Number(process.env.PORT) || 10000;
 const PUBLIC_DIR = path.join(__dirname, "public");
+const ADMIN_CODE = process.env.ADMIN_CODE || "";
+const ADMIN_SESSION_TTL = 60 * 60;
 
 // Render/Cloudflare transmettent l'adresse IP du client via un proxy.
 // La valeur 1 évite que le rate limiter utilise l'IP du proxy pour tout le monde.
@@ -64,25 +67,80 @@ const adminLimiter = rateLimit({
     message: { error: "Trop de requêtes administratives. Réessayez plus tard." }
 });
 
+function safeEqual(left, right) {
+    const a = Buffer.from(String(left));
+    const b = Buffer.from(String(right));
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+function signAdminSession(expiresAt) {
+    const payload = String(expiresAt);
+    const signature = crypto.createHmac("sha256", ADMIN_CODE).update(payload).digest("hex");
+    return `${payload}.${signature}`;
+}
+
+function readCookie(req, name) {
+    const cookies = String(req.headers.cookie || "").split(";");
+    const entry = cookies.find(item => item.trim().startsWith(`${name}=`));
+    return entry ? decodeURIComponent(entry.trim().slice(name.length + 1)) : "";
+}
+
+function hasAdminSession(req) {
+    if (!ADMIN_CODE) return false;
+    const token = readCookie(req, "marco_admin");
+    const separator = token.lastIndexOf(".");
+    if (separator < 1) return false;
+    const expiresAt = Number(token.slice(0, separator));
+    const signature = token.slice(separator + 1);
+    return Number.isFinite(expiresAt) && expiresAt > Math.floor(Date.now() / 1000)
+        && safeEqual(signature, signAdminSession(expiresAt).split(".")[1]);
+}
+
+function adminAuth(req, res, next) {
+    if (!ADMIN_CODE) {
+        console.error("❌ ADMIN_CODE est absent : accès admin désactivé.");
+        return res.status(503).json({ error: "Administration non configurée." });
+    }
+    if (!hasAdminSession(req)) return res.status(401).json({ error: "Code administrateur requis." });
+    return next();
+}
+
 // Les fichiers statiques ne consomment pas le quota API. Les dotfiles restent
 // masqués par défaut afin d'éviter l'exposition accidentelle de fichiers cachés.
+// Le site public reste entièrement accessible. Seul le parcours Admin du footer
+// crée ce cookie temporaire avant d'ouvrir le dashboard.
+app.post("/admin/login", adminLimiter, (req, res) => {
+    if (!ADMIN_CODE) return res.status(503).json({ error: "Administration non configurée." });
+    const submittedCode = String(req.body?.code || "");
+    if (!safeEqual(submittedCode, ADMIN_CODE)) {
+        return res.status(401).json({ error: "Code administrateur incorrect." });
+    }
+    const expiresAt = Math.floor(Date.now() / 1000) + ADMIN_SESSION_TTL;
+    res.cookie("marco_admin", signAdminSession(expiresAt), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: ADMIN_SESSION_TTL * 1000,
+        path: "/"
+    });
+    return res.json({ success: true });
+});
+
+app.get("/admin", adminLimiter, adminAuth, (req, res) => {
+    res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
+});
+app.get("/admin.html", adminLimiter, adminAuth, (req, res) => {
+    res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
+});
+
 app.use(express.static(PUBLIC_DIR, {
     dotfiles: "ignore",
     index: false,
     maxAge: process.env.NODE_ENV === "production" ? "1h" : 0
 }));
 
-// Alias propre pour l'interface d'administration. La protection d'accès doit
-// être ajoutée avant la mise en production si cette page contient des données
-// sensibles; le rate limiter ne remplace pas une authentification.
-app.get("/admin", adminLimiter, (req, res) => {
-    res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
-});
-
 // Dashboard admin : toutes les routes restent compatibles avec admin-routes.js.
-// IMPORTANT : ajouter une authentification/session avant d'exposer ces routes
-// sur Internet; la limitation seule ne suffit pas à protéger les données.
-app.use("/api/admin", adminLimiter, require("./admin-routes.js"));
+app.use("/api/admin", adminLimiter, adminAuth, require("./admin-routes.js"));
 
 const startServer = (startBotFunc, sessionsMap) => {
     // ---------- Pairing code ----------

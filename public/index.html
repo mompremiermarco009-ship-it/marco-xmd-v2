@@ -1668,11 +1668,18 @@ function openAdmin(e) {
     setTimeout(() => document.getElementById('adminPassword').focus(), 100);
 }
 function closeAdmin() { document.getElementById('adminModal').classList.remove('active'); }
-function submitAdmin() {
+async function submitAdmin() {
     const pwd = document.getElementById('adminPassword').value;
-    if (pwd === "marco2026") {
+    try {
+        const response = await fetch('/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ code: pwd })
+        });
+        if (!response.ok) throw new Error('Code incorrect');
         window.location.href = "/admin.html";
-    } else {
+    } catch {
         document.getElementById('adminError').style.display = 'block';
         document.getElementById('adminPassword').value = '';
         document.getElementById('adminPassword').focus();
