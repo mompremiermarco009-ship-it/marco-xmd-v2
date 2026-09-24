@@ -30,7 +30,7 @@ app.use(
                 styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
                 fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
                 imgSrc: ["'self'", "https:", "data:", "blob:"],
-                connectSrc: ["'self'"],
+                connectSrc: ["'self'", "https://api.github.com"],
                 formAction: ["'self'"],
                 upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null
             }
@@ -133,6 +133,13 @@ app.get("/admin.html", adminLimiter, adminAuth, (req, res) => {
     res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
 });
 
+// Fichiers .well-known (assetlinks.json pour TWA Android)
+app.use("/.well-known", express.static(path.join(PUBLIC_DIR, ".well-known"), {
+    dotfiles: "allow",
+    index: false,
+    maxAge: "1h"
+}));
+
 app.use(express.static(PUBLIC_DIR, {
     dotfiles: "ignore",
     index: false,
@@ -227,15 +234,15 @@ const startServer = (startBotFunc, sessionsMap) => {
     });
 
     // ---------- Outils ----------
-    app.use("/video_downloader", generalApiLimiter, require("./video_downloader/routes.js"));
+    app.use(generalApiLimiter, require("./video_downloader/routes.js"));
     app.use("/video_downloader", express.static(path.join(__dirname, "video_downloader", "public")));
     app.get("/video_downloader.html", (req, res) => res.redirect("/video_downloader/"));
 
-    app.use("/voice_studio", generalApiLimiter, require("./voice_studio/routes.js"));
+    app.use(generalApiLimiter, require("./voice_studio/routes.js"));
     app.use("/voice_studio", express.static(path.join(__dirname, "voice_studio", "public")));
     app.get("/voice_studio.html", (req, res) => res.redirect("/voice_studio/"));
 
-    app.use("/marco_lyrics", generalApiLimiter, require("./marco_lyrics/routes.js"));
+    app.use(generalApiLimiter, require("./marco_lyrics/routes.js"));
     app.use("/marco_lyrics", express.static(path.join(__dirname, "marco_lyrics", "public")));
     app.get("/marco_lyrics.html", (req, res) => res.redirect("/marco_lyrics/"));
 

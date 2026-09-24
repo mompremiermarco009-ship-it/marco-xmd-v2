@@ -1009,11 +1009,11 @@
             </button>
             <a class="nav-btn" href="/games.html">
                 <i class="fas fa-gamepad"></i>
-                <span><span data-i18n="nav.games">Jeux</span></span>
+                <span data-i18n="nav.games">Jeux</span>
             </a>
             <a class="nav-btn primary" href="#" onclick="openPairing(event)">
                 <i class="fas fa-key"></i>
-                <span><span data-i18n="nav.connect">Connecter</span>
+                <span data-i18n="nav.connect">Connecter</span>
             </a>
             <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()" aria-label="Menu">
                 <span></span>
@@ -1078,6 +1078,17 @@
     <a href="#" onclick="openBugReport(event); closeMenu();">
         <i class="fas fa-bug"></i> Signaler un bug
     </a>
+
+    <div class="menu-divider"></div>
+
+        <div class="menu-divider"></div>
+
+    <div class="marco-lang-section">Langue / Language / Lang</div>
+    <div class="marco-lang-row" id="marco-lang-row">
+        <button data-lang="ht" onclick="marcoI18n.setLang('ht')" title="Kreyòl Ayisyen">🇭🇹</button>
+        <button data-lang="fr" onclick="marcoI18n.setLang('fr')" title="Français">🇫🇷</button>
+        <button data-lang="en" onclick="marcoI18n.setLang('en')" title="English">🇺🇸</button>
+    </div>
 
     <div class="menu-divider"></div>
 
