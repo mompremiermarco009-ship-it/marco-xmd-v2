@@ -972,6 +972,39 @@
   pointer-events: none !important;
 }
 </style>
+
+<style id="marco-btn-disabled-css">
+/* ===== Boutons desactives (bientot disponible) ===== */
+.nav-btn.disabled,
+.nav-btn[aria-disabled="true"],
+.mobile-menu a.disabled,
+.mobile-menu a[aria-disabled="true"] {
+    background: var(--surface-alt) !important;
+    color: var(--text-muted) !important;
+    border-color: var(--border) !important;
+    cursor: not-allowed !important;
+    opacity: 0.55 !important;
+    pointer-events: none !important;
+    filter: grayscale(1) !important;
+}
+.nav-btn.disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    background: var(--surface-alt) !important;
+}
+.cta-btn.disabled,
+.cta-btn[aria-disabled="true"] {
+    background: rgba(255,255,255,0.25) !important;
+    color: rgba(255,255,255,0.6) !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+    filter: grayscale(1);
+}
+.cta-btn.disabled:hover {
+    transform: none !important;
+}
+</style>
 </head>
 <body>
 
@@ -1011,7 +1044,7 @@
                 <i class="fas fa-gamepad"></i>
                 <span data-i18n="nav.games">Jeux</span>
             </a>
-            <a class="nav-btn primary" href="#" onclick="openPairing(event)">
+            <a class="nav-btn disabled" href="#" onclick="return false;" aria-disabled="true" title="Bientot disponible">
                 <i class="fas fa-key"></i>
                 <span data-i18n="nav.connect">Connecter</span>
             </a>
@@ -1033,7 +1066,7 @@
     <a href="/games.html" onclick="closeMenu()">
         <i class="fas fa-gamepad"></i> <span data-i18n="menu.games">Mini-jeux</span>
     </a>
-    <a href="#" onclick="openPairing(event); closeMenu();">
+    <a href="#" class="disabled" aria-disabled="true" title="Bientot disponible" onclick="return false;">
         <i class="fas fa-key"></i> <span data-i18n="menu.connect">Connecter un bot</span>
     </a>
 
@@ -1325,7 +1358,7 @@
     <section class="cta-section">
         <h2 data-i18n="cta.title">Prêt à démarrer ?</h2>
         <p data-i18n="cta.text">Connectez votre premier bot WhatsApp en moins d'une minute.</p>
-        <a class="cta-btn" href="#" onclick="openPairing(event)">
+        <a class="cta-btn disabled" href="#" aria-disabled="true" title="Bientot disponible" onclick="return false;">
             <i class="fas fa-key"></i> Connecter maintenant
         </a>
     </section>
@@ -2058,6 +2091,23 @@ window.addEventListener('keydown', (e) => {
             border-color: var(--primary, #8b0000);
         }
 
+
+    
+        /* ===== MARCO BTN DISABLED ===== */
+        .nav-btn.disabled,
+        .nav-btn[aria-disabled="true"] {
+            background: var(--surface-alt) !important;
+            color: var(--text-muted) !important;
+            border-color: var(--border) !important;
+            cursor: not-allowed !important;
+            opacity: 0.6 !important;
+            pointer-events: none !important;
+            filter: grayscale(1) !important;
+        }
+        .nav-btn.disabled:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
 
     </style>
 
