@@ -731,6 +731,26 @@
                 </table>
             </div>
         </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-bell"></i> Notifications téléphone</div>
+            <div class="card-subtitle"><span id="pushSubscriberCount">0</span> téléphone(s) inscrit(s). Les utilisateurs doivent d’abord accepter les notifications sur la page d’accueil.</div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Titre</label>
+                    <input class="form-input" id="pushTitle" maxlength="100" value="MARCO-XMD">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lien à ouvrir (optionnel)</label>
+                    <input class="form-input" id="pushUrl" maxlength="200" value="/">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Message</label>
+                <textarea class="form-input" id="pushBody" maxlength="300" rows="3" placeholder="Écrivez le message à envoyer..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="sendPushNotification()"><i class="fas fa-paper-plane"></i> Envoyer à tous les téléphones</button>
+        </div>
     </div>
 
     <!-- ============ COMMANDES ============ -->
@@ -965,6 +985,10 @@ async function loadPageData(name) {
     if (!currentSession && name !== 'dashboard' && name !== 'sessions') return;
     try {
         if (name === 'dashboard') {
+            try {
+                const pushStats = await api('/notifications/stats');
+                document.getElementById('pushSubscriberCount').textContent = pushStats.subscribers;
+            } catch {}
             const s = allSessions.find(x => x.id === currentSession);
             if (s) {
                 const statusEl = document.getElementById('statStatus');
@@ -1012,6 +1036,24 @@ async function loadPageData(name) {
         }
     } catch (err) {
         toast('Erreur : ' + err.message, 'error');
+    }
+}
+
+async function sendPushNotification() {
+    const title = document.getElementById('pushTitle').value.trim();
+    const body = document.getElementById('pushBody').value.trim();
+    const url = document.getElementById('pushUrl').value.trim() || '/';
+    if (!title || !body) return toast('Le titre et le message sont requis', 'error');
+    try {
+        const result = await api('/notifications/broadcast', {
+            method: 'POST',
+            body: JSON.stringify({ title, body, url })
+        });
+        toast(`${result.sent} notification(s) envoyée(s)`, 'success');
+        document.getElementById('pushBody').value = '';
+        document.getElementById('pushSubscriberCount').textContent = Math.max(0, result.total - result.removed);
+    } catch (err) {
+        toast(err.message, 'error');
     }
 }
 

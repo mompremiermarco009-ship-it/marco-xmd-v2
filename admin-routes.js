@@ -8,6 +8,7 @@ const express = require('express');
 const fs = require('fs-extra');
 const path = require('path');
 const QRCode = require('qrcode');
+const { readSubscriptions, broadcastNotification } = require('./push-service');
 const router = express.Router();
 
 const SESSIONS_DIR = path.join(__dirname, 'sessions');
@@ -49,6 +50,25 @@ function writeSessionConfig(sessionID, data) {
 function notFound(res, msg = 'Session introuvable') {
     return res.status(404).json({ error: msg });
 }
+
+// ---------- Notifications Web Push ----------
+router.get('/notifications/stats', (req, res) => {
+    res.json({ subscribers: readSubscriptions().length });
+});
+
+router.post('/notifications/broadcast', async (req, res) => {
+    const { title, body, url, icon } = req.body || {};
+    if (!String(title || '').trim() || !String(body || '').trim()) {
+        return res.status(400).json({ error: 'Le titre et le message sont requis.' });
+    }
+    try {
+        const result = await broadcastNotification({ title, body, url, icon });
+        res.json({ success: true, ...result });
+    } catch (error) {
+        const status = error.code === 'PUSH_NOT_CONFIGURED' ? 503 : 500;
+        res.status(status).json({ error: error.message });
+    }
+});
 
 // ---------- Liste des sessions ----------
 

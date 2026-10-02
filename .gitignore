@@ -17,6 +17,7 @@ downloads/
 cookies.txt
 .env
 apiKeys.json
+data/push-subscriptions.json
 
 # OS
 .DS_Store
