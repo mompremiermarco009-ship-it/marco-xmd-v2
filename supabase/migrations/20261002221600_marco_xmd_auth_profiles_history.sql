@@ -20,7 +20,7 @@ create table if not exists public.activity_history (
 );
 
 create or replace function public.set_updated_at()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql set search_path = public as $$
 begin new.updated_at = now(); return new; end;
 $$;
 
@@ -41,6 +41,9 @@ $$;
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users
 for each row execute function public.handle_new_auth_user();
+
+revoke execute on function public.handle_new_auth_user() from public, anon, authenticated;
+revoke execute on function public.set_updated_at() from public, anon, authenticated;
 
 alter table public.profiles enable row level security;
 alter table public.activity_history enable row level security;
