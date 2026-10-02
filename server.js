@@ -68,6 +68,9 @@ const adminLimiter = rateLimit({
     message: { error: "Trop de requêtes administratives. Réessayez plus tard." }
 });
 
+// Notifications Web Push : les abonnements sont créés depuis la PWA.
+app.use("/api/push", generalApiLimiter, require("./push-routes.js"));
+
 function safeEqual(left, right) {
     const a = Buffer.from(String(left));
     const b = Buffer.from(String(right));
