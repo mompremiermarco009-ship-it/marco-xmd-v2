@@ -26,12 +26,12 @@ app.use(
                 baseUri: ["'self'"],
                 objectSrc: ["'none'"],
                 frameAncestors: ["'self'"],
-                scriptSrc: ["'self'", "'unsafe-inline'"],
+                scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
                 scriptSrcAttr: ["'unsafe-inline'"],
                 styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
                 fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
                 imgSrc: ["'self'", "https:", "data:", "blob:"],
-                connectSrc: ["'self'", "https://api.github.com"],
+                connectSrc: ["'self'", "https://api.github.com", "https://mcpnnnnaikouoebgvwcf.supabase.co"],
                 formAction: ["'self'"],
                 upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null
             }
@@ -42,6 +42,13 @@ app.use(
 
 app.use(express.json({ limit: "5kb" }));
 app.use(express.urlencoded({ extended: false, limit: "5kb" }));
+
+app.get("/api/config", (req, res) => {
+    res.json({
+        supabaseUrl: process.env.SUPABASE_URL || "https://mcpnnnnaikouoebgvwcf.supabase.co",
+        supabaseKey: process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || ""
+    });
+});
 
 const generalApiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,

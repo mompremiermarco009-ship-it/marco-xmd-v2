@@ -3,6 +3,10 @@ const CACHE_NAME = 'marco-cache-2026-10-02';
 const CORE_ASSETS = [
   '/',
   '/index.html',
+  '/auth.html',
+  '/profile.html',
+  '/history.html',
+  '/account.js',
   '/admin.html',
   '/games.html',
   '/404.html',

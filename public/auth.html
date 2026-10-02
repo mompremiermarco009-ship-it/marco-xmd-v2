@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MARCO-XMD | Connexion</title>
+  <link rel="icon" href="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png">
+  <style>
+    :root{color-scheme:dark;--bg:#07111f;--card:#101d31;--line:#243754;--text:#f8fafc;--muted:#9fb0c8;--primary:#3b82f6;--danger:#f87171;--success:#34d399}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 0,#17345b 0,transparent 42%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}.card{width:min(100%,440px);padding:32px;background:rgba(16,29,49,.94);border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 80px #0007}.brand{text-align:center;margin-bottom:24px}.brand img{width:68px;border-radius:18px}.brand h1{margin:12px 0 4px;font-size:1.45rem}.brand p,.hint{color:var(--muted);font-size:.9rem}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:#091528;border-radius:10px;margin-bottom:22px}.tabs button,.btn{border:0;border-radius:8px;padding:11px;font:inherit;font-weight:700;cursor:pointer}.tabs button{background:transparent;color:var(--muted)}.tabs button.active{background:var(--primary);color:#fff}.field{margin:14px 0}.field label{display:block;margin-bottom:6px;font-size:.82rem;color:var(--muted)}input{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:9px;background:#091528;color:var(--text);font:inherit;outline:0}input:focus{border-color:var(--primary)}.btn{width:100%;background:var(--primary);color:#fff;margin-top:8px}.btn:disabled{opacity:.6}.message{display:none;margin:14px 0;padding:11px;border-radius:9px;font-size:.86rem}.message.show{display:block}.message.error{background:#451b26;color:#fecaca}.message.success{background:#103b32;color:#a7f3d0}.footer{text-align:center;margin-top:20px}.footer a{color:#93c5fd;text-decoration:none}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand"><img src="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png" alt="MARCO-XMD"><h1>Ton espace MARCO-XMD</h1><p>Connecte-toi pour retrouver ton profil et ton historique.</p></div>
+    <div class="tabs"><button id="loginTab" class="active" type="button">Connexion</button><button id="signupTab" type="button">Créer un compte</button></div>
+    <form id="authForm">
+      <div class="field" id="nameField" style="display:none"><label for="name">Nom affiché</label><input id="name" maxlength="80" autocomplete="name"></div>
+      <div class="field"><label for="email">Adresse e-mail</label><input id="email" type="email" required autocomplete="email"></div>
+      <div class="field"><label for="password">Mot de passe</label><input id="password" type="password" required minlength="6" autocomplete="current-password"></div>
+      <div id="message" class="message"></div>
+      <button id="submit" class="btn" type="submit">Se connecter</button>
+    </form>
+    <div class="footer"><a href="/">← Retour à l’accueil</a></div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/account.js"></script>
+  <script>
+    (() => {
+      let mode = 'login';
+      const form = document.getElementById('authForm'), nameField = document.getElementById('nameField'), submit = document.getElementById('submit'), message = document.getElementById('message');
+      const show = (text, type) => { message.textContent = text; message.className = 'message show ' + type; };
+      const setMode = next => { mode = next; document.getElementById('loginTab').classList.toggle('active', mode === 'login'); document.getElementById('signupTab').classList.toggle('active', mode === 'signup'); nameField.style.display = mode === 'signup' ? 'block' : 'none'; submit.textContent = mode === 'signup' ? 'Créer mon compte' : 'Se connecter'; message.className = 'message'; };
+      document.getElementById('loginTab').onclick = () => setMode('login'); document.getElementById('signupTab').onclick = () => setMode('signup');
+      (async () => { if (await MarcoAccount.currentUser()) location.href = '/profile.html'; })();
+      form.onsubmit = async event => { event.preventDefault(); submit.disabled = true; show('Connexion à Supabase…', 'success'); try { const client = await MarcoAccount.getClient(); const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value; let result;
+          if (mode === 'signup') result = await client.auth.signUp({ email, password, options: { data: { display_name: document.getElementById('name').value.trim() } } });
+          else result = await client.auth.signInWithPassword({ email, password });
+          if (result.error) throw result.error;
+          if (mode === 'signup' && !result.data.session) { show('Compte créé. Vérifie ton e-mail pour confirmer ton adresse.', 'success'); submit.disabled = false; return; }
+          if (result.data.user) await MarcoAccount.addHistory(result.data.user.id, mode === 'signup' ? 'signup' : 'login', mode === 'signup' ? 'Compte créé' : 'Connexion', 'Accès à ton espace MARCO-XMD');
+          location.href = '/profile.html';
+        } catch (error) { show(error.message || 'Une erreur est survenue.', 'error'); submit.disabled = false; }
+      };
+    })();
+  </script>
+</body>
+</html>
