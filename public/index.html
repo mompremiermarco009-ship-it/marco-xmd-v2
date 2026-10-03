@@ -1054,7 +1054,7 @@
             </a>
             <a class="nav-btn primary" href="/auth.html">
                 <i class="fas fa-user"></i>
-                <span>Mon compte</span>
+                <span data-i18n="account.nav">Mon compte</span>
             </a>
             <a class="nav-btn disabled" href="#" onclick="return false;" aria-disabled="true" title="Bientot disponible">
                 <i class="fas fa-key"></i>
@@ -1079,7 +1079,7 @@
         <i class="fas fa-gamepad"></i> <span data-i18n="menu.games">Mini-jeux</span>
     </a>
     <a href="/auth.html" onclick="closeMenu()">
-        <i class="fas fa-user"></i> <span>Mon compte</span>
+        <i class="fas fa-user"></i> <span data-i18n="account.nav">Mon compte</span>
     </a>
     <a href="#" class="disabled" aria-disabled="true" title="Bientot disponible" onclick="return false;">
         <i class="fas fa-cubes"></i> <span data-i18n="menu.connect">Services (bientôt)</span>
@@ -1184,7 +1184,7 @@
             <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="download.text">Telecharger l'application directement sur votre telephone</p>
             <a href="/apk/MARCO-XMD.apk" download="MARCO-XMD.apk" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);">
                 <span style="font-size: 20px;">&#11015;&#65039;</span>
-                <span>Telecharger l'APK</span>
+                <span data-i18n="download.button">Télécharger l'APK</span>
                 <span style="font-size: 11px; opacity: 0.85; font-weight: 400;">(4.7 Mo)</span>
             </a>
             <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128274; Fichier signe &bull; Compatible Android 6.0+</p>
@@ -1197,7 +1197,7 @@
             <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="access.text">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
             <a href="https://marco-xmd-v2.onrender.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);">
                 <span style="font-size: 20px;">&#127760;</span>
-                <span>Acceder au site</span>
+                <span data-i18n="access.button">Accéder au site</span>
             </a>
             <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128241; Version web officielle &bull; Toujours a jour</p>
         </div>
@@ -1307,18 +1307,51 @@
         <div class="steps">
             <div class="step">
                 <div class="step-num">1</div>
-                <h3 data-i18n="how.step1.title">Ouvrez l'app</h3>
-                <p data-i18n="how.step1.desc">Depuis votre navigateur ou l'icône installée sur votre téléphone.</p>
+                <h3 data-i18n="how.step1.title">Téléchargez l'app</h3>
+                <p data-i18n="how.step1.desc">Cliquez sur le bouton de téléchargement pour récupérer l'APK MARCO-XMD.</p>
             </div>
             <div class="step">
                 <div class="step-num">2</div>
-                <h3 data-i18n="how.step2.title">Créez votre espace</h3>
-                <p data-i18n="how.step2.desc">Inscrivez-vous si vous souhaitez synchroniser votre profil et votre historique.</p>
+                <h3 data-i18n="how.step2.title">Installez l'APK</h3>
+                <p data-i18n="how.step2.desc">Ouvrez le fichier sur votre téléphone et autorisez l'installation si nécessaire.</p>
             </div>
             <div class="step">
                 <div class="step-num">3</div>
                 <h3 data-i18n="how.step3.title">Profitez</h3>
-                <p data-i18n="how.step3.desc">Explorez les outils disponibles et activez les notifications si vous le souhaitez.</p>
+                <p data-i18n="how.step3.desc">Explorez tous les outils disponibles depuis votre téléphone.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compte utilisateur -->
+    <section class="section account-highlight">
+        <div class="section-header">
+            <h2><i class="fas fa-user-circle"></i> <span data-i18n="account.title">Votre espace personnel</span></h2>
+            <p data-i18n="account.subtitle">Centralisez votre profil, votre historique et vos préférences.</p>
+        </div>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="ic-icon"><i class="fas fa-envelope"></i></div>
+                <h3 data-i18n="account.login">Inscription et connexion</h3>
+                <p data-i18n="account.login.desc">Créez un compte avec votre adresse e-mail et retrouvez votre espace sur vos appareils.</p>
+                <a class="footer-link" href="/auth.html"><i class="fas fa-arrow-right"></i> <span data-i18n="account.open">Ouvrir mon compte</span></a>
+            </div>
+            <div class="info-card">
+                <div class="ic-icon"><i class="fas fa-id-card"></i></div>
+                <h3 data-i18n="account.profile">Profil personnalisé</h3>
+                <p data-i18n="account.profile.desc">Gérez votre nom d'affichage, votre bio et vos préférences.</p>
+                <a class="footer-link" href="/profile.html"><i class="fas fa-user-pen"></i> <span data-i18n="account.openProfile">Voir mon profil</span></a>
+            </div>
+            <div class="info-card">
+                <div class="ic-icon"><i class="fas fa-clock-rotate-left"></i></div>
+                <h3 data-i18n="account.history">Historique des activités</h3>
+                <p data-i18n="account.history.desc">Retrouvez vos activités enregistrées dans votre espace sécurisé.</p>
+                <a class="footer-link" href="/history.html"><i class="fas fa-list"></i> <span data-i18n="account.openHistory">Voir mon historique</span></a>
+            </div>
+            <div class="info-card">
+                <div class="ic-icon"><i class="fas fa-bell"></i></div>
+                <h3 data-i18n="account.notifications">Notifications optionnelles</h3>
+                <p data-i18n="account.notifications.desc">Activez les notifications mobiles uniquement si vous le souhaitez.</p>
             </div>
         </div>
     </section>
@@ -1330,6 +1363,26 @@
             <p data-i18n="services.subtitle">Services additionnels bientôt disponibles</p>
         </div>
         <div class="tools-grid">
+            <a class="tool-card" href="/video_downloader/">
+                <div class="tool-icon blue"><i class="fas fa-download"></i></div>
+                <div class="tool-info"><h3 data-i18n="tools.video.title">Video Downloader</h3><p data-i18n="tools.video.desc">Téléchargez des vidéos et audios depuis YouTube, Facebook, Instagram et TikTok.</p></div>
+                <span class="tool-tag new" data-i18n="services.available">Disponible</span>
+            </a>
+            <a class="tool-card" href="/marco_lyrics/">
+                <div class="tool-icon purple"><i class="fas fa-music"></i></div>
+                <div class="tool-info"><h3 data-i18n="tools.lyrics.title">Marco Lyrics</h3><p data-i18n="tools.lyrics.desc">Trouvez les paroles de vos chansons préférées en quelques secondes.</p></div>
+                <span class="tool-tag new" data-i18n="services.available">Disponible</span>
+            </a>
+            <a class="tool-card" href="/voice_studio/">
+                <div class="tool-icon green"><i class="fas fa-wand-magic-sparkles"></i></div>
+                <div class="tool-info"><h3 data-i18n="tools.voice.title">Voice Studio</h3><p data-i18n="tools.voice.desc">Convertissez votre texte en voix naturelle avec des voix françaises variées.</p></div>
+                <span class="tool-tag new" data-i18n="services.available">Disponible</span>
+            </a>
+            <a class="tool-card" href="/games.html">
+                <div class="tool-icon orange"><i class="fas fa-gamepad"></i></div>
+                <div class="tool-info"><h3 data-i18n="tools.games.title">Mini-Jeux</h3><p data-i18n="tools.games.desc">Snake, Morpion, Pong, Memory et bien d'autres jeux à découvrir.</p></div>
+                <span class="tool-tag" data-i18n="services.available">Disponible</span>
+            </a>
             <div class="tool-card disabled-service" title="Bientôt disponible">
                 <div class="tool-icon blue"><i class="fab fa-whatsapp"></i></div>
                 <div class="tool-info">
@@ -1385,10 +1438,10 @@
             </div>
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-question">
-                    <span data-i18n="faq.q6">Comment fonctionnent les notifications ?</span>
+                    <span data-i18n="faq.q6">Quand le bot WhatsApp sera-t-il disponible ?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer" data-i18n="faq.a6">Les notifications mobiles sont optionnelles et nécessitent l'autorisation de l'utilisateur. Elles sont envoyées uniquement aux appareils inscrits.</div>
+                <div class="faq-answer" data-i18n="faq.a6">Le service est en préparation et reste désactivé jusqu'à sa mise en production.</div>
             </div>
         </div>
     </section>
