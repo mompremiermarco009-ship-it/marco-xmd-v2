@@ -8,7 +8,8 @@
     <link rel="apple-touch-icon" href="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png">
     <meta property="og:image" content="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png">
     <meta property="og:title" content="MARCO-XMD">
-    <meta property="og:description" content="Bot WhatsApp multi-session — Simple, rapide, fiable">
+    <meta name="description" content="MARCO-XMD — Application web évolutive avec outils intégrés, compte utilisateur et installation mobile.">
+    <meta property="og:description" content="Application web évolutive — outils web, compte utilisateur et installation mobile.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script>
@@ -442,6 +443,13 @@
             border-color: var(--primary-light);
         }
         .tool-card:hover::before { opacity: 1; }
+        .tool-card.disabled-service {
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(1);
+            cursor: not-allowed;
+        }
+        .tool-card.disabled-service:hover { transform: none; box-shadow: var(--shadow); }
         .tool-icon {
             width: 48px;
             height: 48px;
@@ -1050,7 +1058,7 @@
             </a>
             <a class="nav-btn disabled" href="#" onclick="return false;" aria-disabled="true" title="Bientot disponible">
                 <i class="fas fa-key"></i>
-                <span data-i18n="nav.connect">Connecter</span>
+                <span data-i18n="nav.connect">Services</span>
             </a>
             <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()" aria-label="Menu">
                 <span></span>
@@ -1074,7 +1082,7 @@
         <i class="fas fa-user"></i> <span>Mon compte</span>
     </a>
     <a href="#" class="disabled" aria-disabled="true" title="Bientot disponible" onclick="return false;">
-        <i class="fas fa-key"></i> <span data-i18n="menu.connect">Connecter un bot</span>
+        <i class="fas fa-cubes"></i> <span data-i18n="menu.connect">Services (bientôt)</span>
     </a>
 
     <div class="menu-divider"></div>
@@ -1147,12 +1155,11 @@
         <img src="https://i.postimg.cc/mrD86FZ3/Marcoxmd-logo.png" alt="MARCO-XMD">
         <h2 data-i18n="hero.title">Bienvenue sur MARCO-XMD</h2>
         <p class="hero-sub" data-i18n="hero.subtitle">
-            Un bot WhatsApp <strong>simple, rapide et fiable</strong> conçu pour rendre votre quotidien plus pratique.
-            Multi-session, léger et optimisé pour un maximum de performance.
+            Une application web <strong>évolutive, rapide et moderne</strong>. Installez-la sur votre téléphone et profitez d'une expérience fluide, sans dépendre d'un store.
         </p>
         <div class="badges">
             <span class="badge green"><i class="fas fa-check-circle"></i> <span data-i18n="hero.badge.free">Gratuit</span></span>
-            <span class="badge blue"><i class="fas fa-bolt"></i> <span data-i18n="hero.badge.fast">Ultra rapide</span></span>
+            <span class="badge blue"><i class="fas fa-arrows-rotate"></i> <span data-i18n="hero.badge.fast">Web évolutif</span></span>
             <span class="badge orange"><i class="fas fa-shield-alt"></i> <span data-i18n="hero.badge.secure">Sécurisé</span></span>
         </div>
     </section>
@@ -1162,7 +1169,7 @@
         <div class="notice-icon"><i class="fas fa-check-circle"></i></div>
         <div class="notice-content">
             <h3><span data-i18n="notice.title">Dernière mise à jour</span> — <span id="marco-last-update">chargement…</span></h3>
-            <p data-i18n="notice.text">MARCO-XMD a été entièrement optimisé et allégé pour offrir de meilleures performances face aux nouvelles restrictions de WhatsApp. Le bot est désormais plus rapide, plus léger et plus stable. De nouvelles commandes seront ajoutées progressivement.</p>
+            <p data-i18n="notice.text">MARCO-XMD est désormais une application web évolutive. Installez-la sur votre téléphone pour accéder à toutes les fonctionnalités depuis un seul espace. De nouveaux services seront ajoutés progressivement.</p>
         </div>
     </div>
 
@@ -1270,8 +1277,8 @@
         <div class="info-grid">
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-layer-group"></i></div>
-                <h3 data-i18n="features.multisession.title">Multi-Session</h3>
-                <p data-i18n="features.multisession.desc">Connectez plusieurs numéros WhatsApp depuis une seule interface, chacun avec sa propre configuration.</p>
+                <h3 data-i18n="features.multisession.title">Web évolutif</h3>
+                <p data-i18n="features.multisession.desc">Une application qui évolue régulièrement avec de nouvelles fonctionnalités.</p>
             </div>
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-bolt"></i></div>
@@ -1280,13 +1287,13 @@
             </div>
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3 data-i18n="features.antiban.title">Anti-Ban</h3>
-                <p data-i18n="features.antiban.desc">Protection renforcée contre les bans WhatsApp grâce à un design intelligent.</p>
+                <h3 data-i18n="features.antiban.title">Multi-Outils</h3>
+                <p data-i18n="features.antiban.desc">Video Downloader, Voice Studio, Marco Lyrics et d'autres outils dans une seule application.</p>
             </div>
             <div class="info-card">
                 <div class="ic-icon"><i class="fas fa-server"></i></div>
                 <h3 data-i18n="features.dashboard.title">Dashboard Web</h3>
-                <p data-i18n="features.dashboard.desc">Gérez vos sessions, consultez les logs et configurez tout depuis une interface moderne.</p>
+                <p data-i18n="features.dashboard.desc">Une interface moderne pour tout contrôler et retrouver votre espace personnel.</p>
             </div>
         </div>
     </section>
@@ -1295,23 +1302,41 @@
     <section class="section">
         <div class="section-header">
             <h2><i class="fas fa-route"></i> <span data-i18n="how.title">Comment ça marche</span></h2>
-            <p data-i18n="how.subtitle">Connectez votre bot en 3 étapes simples</p>
+            <p data-i18n="how.subtitle">Commencez en 3 étapes simples</p>
         </div>
         <div class="steps">
             <div class="step">
                 <div class="step-num">1</div>
-                <h3 data-i18n="how.step1.title">Cliquez sur "Connecter"</h3>
-                <p data-i18n="how.step1.desc">Entrez votre numéro WhatsApp dans le formulaire qui s'ouvre.</p>
+                <h3 data-i18n="how.step1.title">Ouvrez l'app</h3>
+                <p data-i18n="how.step1.desc">Depuis votre navigateur ou l'icône installée sur votre téléphone.</p>
             </div>
             <div class="step">
                 <div class="step-num">2</div>
-                <h3 data-i18n="how.step2.title">Choisissez la méthode</h3>
-                <p data-i18n="how.step2.desc">Recevez un code d'appariement ou scannez un QR code.</p>
+                <h3 data-i18n="how.step2.title">Créez votre espace</h3>
+                <p data-i18n="how.step2.desc">Inscrivez-vous si vous souhaitez synchroniser votre profil et votre historique.</p>
             </div>
             <div class="step">
                 <div class="step-num">3</div>
-                <h3 data-i18n="how.step3.title">Entrez le code</h3>
-                <p data-i18n="how.step3.desc">Dans WhatsApp → Appareils connectés → Relier un appareil.</p>
+                <h3 data-i18n="how.step3.title">Profitez</h3>
+                <p data-i18n="how.step3.desc">Explorez les outils disponibles et activez les notifications si vous le souhaitez.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-cubes"></i> <span data-i18n="services.title">Services</span></h2>
+            <p data-i18n="services.subtitle">Services additionnels bientôt disponibles</p>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card disabled-service" title="Bientôt disponible">
+                <div class="tool-icon blue"><i class="fab fa-whatsapp"></i></div>
+                <div class="tool-info">
+                    <h3 data-i18n="services.bot.title">Bot WhatsApp</h3>
+                    <p data-i18n="services.bot.desc">Connectez un bot WhatsApp multi-session à votre compte.</p>
+                </div>
+                <span class="tool-tag" data-i18n="services.bot.tag">Bientôt</span>
             </div>
         </div>
     </section>
@@ -1325,38 +1350,45 @@
         <div class="faq-list">
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-question">
-                    <span>Est-ce que le bot est gratuit ?</span>
+                    <span data-i18n="faq.q1">L'application est-elle gratuite ?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer">Oui, MARCO-XMD est 100% gratuit. Aucun frais caché, aucune limitation de durée.</div>
+                <div class="faq-answer" data-i18n="faq.a1">Oui, l'accès de base est gratuit. Certaines fonctions peuvent évoluer selon les offres futures.</div>
             </div>
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-question">
-                    <span>Mon numéro risque-t-il un ban ?</span>
+                    <span data-i18n="faq.q2">Faut-il créer un compte ?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer">Le bot intègre des protections anti-détection et respecte les restrictions WhatsApp. Cependant, aucun bot n'est 100% sans risque. Utilisez un numéro secondaire de préférence.</div>
+                <div class="faq-answer" data-i18n="faq.a2">Non pour consulter les outils publics. Un compte est nécessaire pour le profil, l'historique et les fonctions synchronisées.</div>
             </div>
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-question">
-                    <span>Puis-je connecter plusieurs numéros ?</span>
+                    <span data-i18n="faq.q3">L'application fonctionne-t-elle sur tous les téléphones ?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer">Oui ! MARCO-XMD supporte le multi-session. Vous pouvez connecter autant de numéros que vous voulez, chacun aura sa propre configuration.</div>
+                <div class="faq-answer" data-i18n="faq.a3">La version web fonctionne sur les navigateurs modernes. L'installation PWA dépend du navigateur et du système.</div>
             </div>
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-question">
-                    <span>Où sont stockées mes données ?</span>
+                    <span data-i18n="faq.q4">Où sont stockées mes données ?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer">Toutes les données sont stockées localement sur votre serveur. Aucune information n'est transmise à des tiers. Les fichiers temporaires sont supprimés automatiquement.</div>
+                <div class="faq-answer" data-i18n="faq.a4">Les données du compte sont stockées dans le projet Supabase dédié à MARCO-XMD et protégées par l'authentification et les policies RLS.</div>
             </div>
             <div class="faq-item" onclick="toggleFaq(this)">
                 <div class="faq-question">
-                    <span>Comment sont protégés mes fichiers ?</span>
+                    <span data-i18n="faq.q5">Comment sont protégés mes fichiers ?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
-                <div class="faq-answer">Chaque fichier téléchargé ou généré a un lien unique et temporaire. Il est supprimé automatiquement après 30 minutes. Personne d'autre n'y a accès.</div>
+                <div class="faq-answer" data-i18n="faq.a5">Les fichiers téléchargés ou générés disposent d'un lien temporaire et sont supprimés automatiquement selon leur durée de conservation.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span data-i18n="faq.q6">Comment fonctionnent les notifications ?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer" data-i18n="faq.a6">Les notifications mobiles sont optionnelles et nécessitent l'autorisation de l'utilisateur. Elles sont envoyées uniquement aux appareils inscrits.</div>
             </div>
         </div>
     </section>
@@ -1364,9 +1396,9 @@
     <!-- CTA -->
     <section class="cta-section">
         <h2 data-i18n="cta.title">Prêt à démarrer ?</h2>
-        <p data-i18n="cta.text">Connectez votre premier bot WhatsApp en moins d'une minute.</p>
-        <a class="cta-btn disabled" href="#" aria-disabled="true" title="Bientot disponible" onclick="return false;">
-            <i class="fas fa-key"></i> Connecter maintenant
+        <p data-i18n="cta.text">Ouvrez MARCO-XMD et profitez de tous nos outils depuis votre téléphone.</p>
+        <a class="cta-btn" href="/apk/MARCO-XMD.apk" download="MARCO-XMD.apk">
+            <i class="fas fa-download"></i> <span data-i18n="cta.button">Télécharger l'APK</span>
         </a>
     </section>
 

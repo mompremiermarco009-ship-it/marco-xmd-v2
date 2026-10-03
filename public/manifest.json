@@ -1,7 +1,7 @@
 {
   "name": "MARCO-XMD",
   "short_name": "MARCO-XMD",
-  "description": "Bot WhatsApp multi-session, outils web et dashboard admin — par Mr_Marco",
+  "description": "Application web évolutive avec outils intégrés, profil et historique — par Mr_Marco",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
