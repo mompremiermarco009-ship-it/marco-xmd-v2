@@ -8,7 +8,7 @@ MARCO-XMD utilise Supabase Auth avec les pages suivantes :
 
 ## Configuration
 
-Le projet utilisé est `Nexus Project` (`mcpnnnnaikouoebgvwcf`). Le navigateur reçoit la configuration depuis `/api/config`. Pour Render, renseigner :
+Le projet dédié utilisé est `MARCO-XMD Production` (`btavjbuzreapisdnmetv`). Le navigateur reçoit la configuration depuis `/api/config`. Pour Render, renseigner :
 
 - `SUPABASE_URL` : URL du projet ;
 - `SUPABASE_PUBLISHABLE_KEY` : clé publishable/anon uniquement — jamais de service-role key dans le navigateur.
@@ -24,10 +24,10 @@ La migration versionnée se trouve dans `supabase/migrations/20261002221600_marc
 - un trigger qui crée automatiquement le profil après inscription ;
 - les policies RLS `select/insert/update` nécessaires.
 
-La migration a déjà été appliquée au projet Supabase connecté.
+La migration a été appliquée au nouveau projet Supabase dédié à MARCO-XMD.
 
-## Avertissement de sécurité du projet existant
+## Ancien projet Supabase
 
-Supabase signale que plusieurs anciennes tables (`users`, `orders`, `conversations`, `videos`, `prompts`, `messages`, `notifications`, `user_settings`) ont actuellement **RLS désactivé**. Elles sont donc accessibles aux rôles `anon` et `authenticated` selon les privilèges exposés par l’API. Cette fonctionnalité n’utilise pas ces tables et ne les a pas modifiées automatiquement, car il faut d’abord définir précisément les règles d’accès métier pour chacune.
+L’ancien projet `Nexus Project` (`mcpnnnnaikouoebgvwcf`) appartenait à un autre produit. MARCO-XMD ne l’utilise plus et aucune donnée n’a été supprimée de ce projet.
 
-Avant toute mise en production de ces anciennes fonctionnalités, il faut activer RLS et ajouter des policies adaptées table par table.
+Le nouveau projet commence uniquement avec les tables `profiles` et `activity_history`, toutes deux protégées par RLS.

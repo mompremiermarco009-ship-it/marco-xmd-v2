@@ -31,7 +31,7 @@ app.use(
                 styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
                 fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
                 imgSrc: ["'self'", "https:", "data:", "blob:"],
-                connectSrc: ["'self'", "https://api.github.com", "https://mcpnnnnaikouoebgvwcf.supabase.co"],
+                connectSrc: ["'self'", "https://api.github.com", "https://btavjbuzreapisdnmetv.supabase.co"],
                 formAction: ["'self'"],
                 upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null
             }
@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: false, limit: "5kb" }));
 
 app.get("/api/config", (req, res) => {
     res.json({
-        supabaseUrl: process.env.SUPABASE_URL || "https://mcpnnnnaikouoebgvwcf.supabase.co",
+        supabaseUrl: process.env.SUPABASE_URL || "https://btavjbuzreapisdnmetv.supabase.co",
         supabaseKey: process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || ""
     });
 });

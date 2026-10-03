@@ -1,7 +1,7 @@
 /* MARCO-XMD — Supabase Auth / Profil / Historique */
 (() => {
-  const DEFAULT_URL = 'https://mcpnnnnaikouoebgvwcf.supabase.co';
-  const DEFAULT_KEY = 'sb_publishable_d3BSE6UmcvDMTi6urD60rg_HHBHLJ92';
+  const DEFAULT_URL = 'https://btavjbuzreapisdnmetv.supabase.co';
+  const DEFAULT_KEY = 'sb_publishable_jsB_dReXYCm-SH-qULKVCw_yTC-yCWm';
   let clientPromise;
 
   async function getClient() {
