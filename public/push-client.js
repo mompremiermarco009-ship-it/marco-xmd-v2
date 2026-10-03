@@ -1,6 +1,6 @@
 /* MARCO-XMD — inscription Web Push côté téléphone */
 (() => {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return;
+  if (!window.isSecureContext || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return;
   if (Notification.permission === 'denied') return;
 
   const style = document.createElement('style');
@@ -56,17 +56,29 @@
       button.disabled = true;
       button.textContent = 'Activation…';
       try {
-        const permission = await Notification.requestPermission();
-        if (permission !== 'granted') throw new Error('Permission refusée.');
+        let permission;
+        try {
+          permission = await Notification.requestPermission();
+        } catch (error) {
+          const blockedByOverlay = error && (error.name === 'NotAllowedError' || /overlay|superposition|bulle|autorisation/i.test(error.message || ''));
+          if (blockedByOverlay) {
+            throw new Error('Android bloque cette demande lorsqu’une bulle ou une superposition est active. Fermez les bulles flottantes, puis appuyez de nouveau sur Activer.');
+          }
+          throw error;
+        }
+        if (permission !== 'granted') throw new Error('Autorisation refusée. Vous pouvez l’activer dans les paramètres de notifications de Chrome.');
         await registerSubscription();
         box.innerHTML = '<strong>Notifications activées.</strong><br><span>Vous recevrez les prochaines informations.</span>';
         setTimeout(() => box.remove(), 3500);
       } catch (error) {
         button.disabled = false;
         button.textContent = 'Réessayer';
+        const oldMessage = box.querySelector('.marco-push-error');
+        if (oldMessage) oldMessage.remove();
         const message = document.createElement('small');
+        message.className = 'marco-push-error';
         message.textContent = error.message;
-        message.style.display = 'block'; message.style.marginTop = '8px'; message.style.color = '#dc2626';
+        message.style.display = 'block'; message.style.marginTop = '8px'; message.style.lineHeight = '1.35'; message.style.color = '#dc2626';
         box.appendChild(message);
       }
     };
