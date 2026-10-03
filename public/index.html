@@ -494,7 +494,31 @@
         .tool-tag.new { background: rgba(16,185,129,0.12); color: var(--success); }
         .tool-tag.beta { background: rgba(245,158,11,0.12); color: var(--warning); }
 
-        /* ============ NOTIFICATION ============ */
+        /* ============ ANNONCE INTERNE ============ */
+        .app-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 1180px;
+            margin: 12px auto 0;
+            padding: 10px 14px;
+            border: 1px solid rgba(37, 99, 235, .28);
+            border-radius: 12px;
+            background: linear-gradient(90deg, rgba(37, 99, 235, .12), rgba(14, 165, 233, .08));
+            color: var(--text);
+            font-size: .9rem;
+        }
+        .app-banner[hidden] { display: none; }
+        .app-banner-icon { color: var(--primary); flex: 0 0 auto; }
+        .app-banner-text { flex: 1; }
+        .app-banner-link { color: var(--primary); font-weight: 700; white-space: nowrap; }
+        .app-banner-close { border: 0; background: transparent; color: inherit; cursor: pointer; font-size: 1.1rem; opacity: .7; }
+        @media (max-width: 600px) {
+            .app-banner { margin: 10px 14px 0; font-size: .82rem; }
+            .app-banner-link { display: none; }
+        }
+
+        /* ============ NOTICE DE MISE À JOUR ============ */
         .notice {
             background: var(--notice-bg);
             border: 1px solid var(--notice-border);
@@ -1068,6 +1092,14 @@
         </div>
     </div>
 </nav>
+
+<!-- Barre d’annonce interne : masquée tant qu’aucune publicité n’est configurée. -->
+<div id="marco-app-banner" class="app-banner" hidden role="status" aria-live="polite">
+    <i class="fas fa-bullhorn app-banner-icon" aria-hidden="true"></i>
+    <span class="app-banner-text" data-banner-text></span>
+    <a class="app-banner-link" data-banner-link hidden target="_blank" rel="noopener"></a>
+    <button class="app-banner-close" data-banner-close aria-label="Fermer">&times;</button>
+</div>
 
 <!-- Menu mobile -->
 <div class="mobile-menu" id="mobileMenu">
@@ -2348,7 +2380,7 @@ window.addEventListener('keydown', (e) => {
 
 <!-- ===== FIN MARCO PWA WIDGET v2 ===== -->
 
-<script src="/push-client.js?v=44ee3d7"></script>
+<script src="/app-banner.js?v=1354b5c"></script>
 <script src="/translations.js?v=43e0490"></script>
 <script src="/i18n.js?v=43e0490"></script>
 

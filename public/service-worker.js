@@ -1,5 +1,5 @@
 /* MARCO-XMD — Service Worker PWA */
-const CACHE_NAME = 'marco-cache-2026-10-03-v2';
+const CACHE_NAME = 'marco-cache-2026-10-03-v3';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -14,7 +14,7 @@ const CORE_ASSETS = [
   '/manifest.json',
   '/translations.js',
   '/i18n.js',
-  '/push-client.js',
+  '/app-banner.js',
   '/media/logo192.png',
   '/media/logo512.png'
 ];
