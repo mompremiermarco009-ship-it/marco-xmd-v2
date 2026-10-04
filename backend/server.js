@@ -7,7 +7,7 @@ const config = require("./config.json");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 10000;
-const PUBLIC_DIR = path.join(__dirname, "public");
+const PUBLIC_DIR = path.join(__dirname, "..", "frontend", "public");
 const ADMIN_CODE = process.env.ADMIN_CODE || "";
 const ADMIN_SESSION_TTL = 60 * 60;
 
@@ -127,13 +127,15 @@ app.post("/admin/login", adminLimiter, (req, res) => {
         return res.status(401).json({ error: "Code administrateur incorrect." });
     }
     const expiresAt = Math.floor(Date.now() / 1000) + ADMIN_SESSION_TTL;
-    res.cookie("marco_admin", signAdminSession(expiresAt), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: ADMIN_SESSION_TTL * 1000,
-        path: "/"
-    });
+    const cookieParts = [
+        `marco_admin=${encodeURIComponent(signAdminSession(expiresAt))}`,
+        "HttpOnly",
+        "Path=/",
+        `Max-Age=${ADMIN_SESSION_TTL}`,
+        "SameSite=Lax"
+    ];
+    if (process.env.NODE_ENV === "production") cookieParts.push("Secure");
+    res.setHeader("Set-Cookie", cookieParts.join("; "));
     return res.json({ success: true });
 });
 
@@ -246,19 +248,23 @@ const startServer = (startBotFunc, sessionsMap) => {
 
     // ---------- Outils ----------
     app.use(generalApiLimiter, require("./video_downloader/routes.js"));
-    app.use("/video_downloader", express.static(path.join(__dirname, "video_downloader", "public")));
-    app.get("/video_downloader.html", (req, res) => res.redirect("/video_downloader/"));
+    app.use("/tools/video", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "video")));
+    app.use("/video_downloader", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "video")));
+    app.get("/video_downloader.html", (req, res) => res.redirect("/tools/video/"));
 
     app.use(generalApiLimiter, require("./voice_studio/routes.js"));
-    app.use("/voice_studio", express.static(path.join(__dirname, "voice_studio", "public")));
-    app.get("/voice_studio.html", (req, res) => res.redirect("/voice_studio/"));
+    app.use("/tools/voice", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "voice")));
+    app.use("/voice_studio", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "voice")));
+    app.get("/voice_studio.html", (req, res) => res.redirect("/tools/voice/"));
 
     app.use(generalApiLimiter, require("./marco_lyrics/routes.js"));
-    app.use("/marco_lyrics", express.static(path.join(__dirname, "marco_lyrics", "public")));
-    app.get("/marco_lyrics.html", (req, res) => res.redirect("/marco_lyrics/"));
+    app.use("/tools/lyrics", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "lyrics")));
+    app.use("/marco_lyrics", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "lyrics")));
+    app.get("/marco_lyrics.html", (req, res) => res.redirect("/tools/lyrics/"));
 
     // ---------- Page d'accueil et 404 ----------
-    app.get("/", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "index.html")));
+    app.get("/", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "auth.html")));
+    app.get("/dashboard", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "index.html")));
     app.use((req, res) => {
         res.status(404).sendFile(path.join(PUBLIC_DIR, "404.html"));
     });

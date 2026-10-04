@@ -28,4 +28,4 @@ COPY . .
 ENV PORT=10000
 EXPOSE 10000
 
-CMD ["node", "start-all.js"]
+CMD ["node", "backend/index.js"]

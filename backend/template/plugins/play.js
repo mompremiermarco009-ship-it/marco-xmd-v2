@@ -215,7 +215,7 @@ async function handleDownload(sock, msg, jid, video, choice, publicUrl, owner) {
             await sendFileToWhatsApp(sock, msg, jid, `${publicUrl}${downloadUrl}`, choice, video, size, owner, statusMsg);
         } else {
             // Trop gros → envoyer le lien
-            const directLink = `${publicUrl}/video_downloader/?url=${encodeURIComponent(video.url)}&format=${choice.format}&quality=${choice.quality}`;
+            const directLink = `${publicUrl}/tools/video/?url=${encodeURIComponent(video.url)}&format=${choice.format}&quality=${choice.quality}`;
 
             const text = `╔════════════════════════════╗\n` +
                          `║   📦  𝐅𝐢𝐜𝐡𝐢𝐞𝐫 𝐭𝐫𝐨𝐩 𝐠𝐫𝐨𝐬\n` +
@@ -348,7 +348,7 @@ async function sendFileToWhatsApp(sock, msg, jid, downloadUrl, choice, video, si
         // Fallback : envoyer le lien du site
         const baseUrl = downloadUrl.split('/api/video/')[0];
         const videoUrl = video.url || '';
-        const link = `${baseUrl}/video_downloader/?url=${encodeURIComponent(videoUrl)}&format=${choice.format}&quality=${choice.quality}`;
+        const link = `${baseUrl}/tools/video/?url=${encodeURIComponent(videoUrl)}&format=${choice.format}&quality=${choice.quality}`;
 
         const text = `╔════════════════════════════╗\n` +
                      `║   ⚠️  𝐄𝐫𝐫𝐞𝐮𝐫 𝐝'𝐞𝐧𝐯𝐨𝐢\n` +

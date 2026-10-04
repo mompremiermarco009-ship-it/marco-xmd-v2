@@ -11,4 +11,4 @@ echo "🔍 [START] ffmpeg: $(which ffmpeg || echo 'absent')"
 echo "🔍 [START] edge-tts: $(which edge-tts || echo 'absent')"
 
 echo "🚀 Démarrage MARCO-XMD sur le port $PORT"
-exec node index.js
+exec node backend/index.js

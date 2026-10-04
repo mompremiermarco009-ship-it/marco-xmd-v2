@@ -41,9 +41,9 @@ module.exports = {
 ┃
 ┃  🌐  ${publicUrl}
 ┃
-┃  📥  ${publicUrl}/video_downloader/
-┃  🎵  ${publicUrl}/marco_lyrics/
-┃  🎙️  ${publicUrl}/voice_studio/
+┃  📥  ${publicUrl}/tools/video/
+┃  🎵  ${publicUrl}/tools/lyrics/
+┃  🎙️  ${publicUrl}/tools/voice/
 ┃  🎮  ${publicUrl}/games.html
 ┃
 ╰━━━━━━━━━━━━━━━━━━━━━━╯

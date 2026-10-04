@@ -234,9 +234,9 @@ const MENU_ACTIONS = {
         'C': { action: 'cmd', value: 'ytdl' },
         'D': { action: 'cmd', value: 'tiktok' },
         'E': { action: 'cmd', value: 'instagram' },
-        'F': { action: 'web', value: '/video_downloader/' },
-        'G': { action: 'web', value: '/marco_lyrics/' },
-        'H': { action: 'web', value: '/voice_studio/' }
+        'F': { action: 'web', value: '/tools/video/' },
+        'G': { action: 'web', value: '/tools/lyrics/' },
+        'H': { action: 'web', value: '/tools/voice/' }
     },
     'utils': {
         'A': { action: 'cmd', value: 'qr' },

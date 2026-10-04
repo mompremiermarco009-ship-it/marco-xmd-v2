@@ -10,6 +10,18 @@ Production : <https://marco-xmd-v2.onrender.com>
 
 ---
 
+## État de la refonte actuelle
+
+La structure cible est maintenant active :
+
+- `backend/` contient le serveur, le bot, les plugins, les API et les migrations ;
+- `frontend/public/` contient l’interface et la PWA ;
+- `frontend/public/tools/video/`, `tools/voice/` et `tools/lyrics/` contiennent les interfaces des outils ;
+- `/` affiche `auth.html` ;
+- `/index.html` est le dashboard protégé par le mode connecté ou invité ;
+- `/tools/video/`, `/tools/voice/` et `/tools/lyrics/` sont les URL canoniques ;
+- les anciennes URL `/video_downloader/`, `/voice_studio/` et `/marco_lyrics/` restent compatibles.
+
 ## 1. Vue d’ensemble
 
 MARCO-XMD regroupe plusieurs fonctions dans un seul projet Node.js :
@@ -55,7 +67,7 @@ Express - server.js
 ### Processus principal
 
 1. Render installe les dépendances avec `build.sh`.
-2. Render démarre `node index.js`.
+2. Render démarre `node backend/index.js`.
 3. `index.js` initialise la map des sessions WhatsApp puis démarre Express via `server.js`.
 4. Express sert les pages statiques et enregistre les routes API.
 5. Si un numéro WhatsApp est configuré dans `number` ou fourni en argument, une session est démarrée.
@@ -67,9 +79,10 @@ Express - server.js
 
 ```text
 .
-├── index.js                         # Point d'entrée : bot WhatsApp + serveur web
-├── server.js                        # Application Express, sécurité, routes générales
-├── config.json                      # Configuration générale du bot
+├── backend/                         # Code serveur uniquement
+│   ├── index.js                     # Point d'entrée : bot WhatsApp + serveur web
+│   ├── server.js                    # Application Express, sécurité, routes générales
+│   ├── config.json                  # Configuration générale du bot
 ├── package.json                     # Dépendances et scripts Node
 ├── package-lock.json                # Verrouillage des versions npm
 ├── build.sh                         # Build Render : npm, Python, yt-dlp
@@ -79,7 +92,7 @@ Express - server.js
 ├── requirements.txt                 # Dépendances Python
 ├── number                            # Numéro WhatsApp optionnel pour l’auto-démarrage
 │
-├── public/                          # Interface web principale et PWA
+├── frontend/public/                 # Interface web principale et PWA
 │   ├── index.html                   # Accueil principal
 │   ├── auth.html                    # Inscription et connexion
 │   ├── profile.html                 # Profil utilisateur
@@ -181,11 +194,11 @@ Une clé `service_role` ne doit jamais être placée dans le navigateur, dans Gi
 
 ### Pages et modules montés
 
-- `/` sert `public/index.html` ;
-- les fichiers de `public/` sont statiques ;
-- `/video_downloader/` sert l’interface Video Downloader ;
-- `/voice_studio/` sert l’interface Voice Studio ;
-- `/marco_lyrics/` sert l’interface Marco Lyrics ;
+- `/` sert `frontend/public/index.html` ;
+- les fichiers de `frontend/public/` sont statiques ;
+- `/tools/video/` sert l’interface Video Downloader ;
+- `/tools/voice/` sert l’interface Voice Studio ;
+- `/tools/lyrics/` sert l’interface Marco Lyrics ;
 - toute route inconnue renvoie `public/404.html`.
 
 ---
@@ -210,7 +223,7 @@ Ce dossier est sensible et ignoré par Git.
 
 ### Création d’une session
 
-`ensureSessionDir(sessionID)` copie `template/` dans `sessions/<sessionID>/` lorsqu’une nouvelle session est créée.
+`ensureSessionDir(sessionID)` copie `backend/template/` dans `sessions/<sessionID>/` lorsqu’une nouvelle session est créée.
 
 Chaque session reçoit ensuite :
 
@@ -290,9 +303,9 @@ Pour ajouter une commande :
 - `/auth.html` : inscription et connexion e-mail/mot de passe ;
 - `/profile.html` : lecture et modification du profil ;
 - `/history.html` : affichage des 100 dernières activités ;
-- `public/account.js` : client commun et fonctions d’accès.
+- `frontend/public/account.js` : client commun et fonctions d’accès.
 
-### Fonctions de `public/account.js`
+### Fonctions de `frontend/public/account.js`
 
 - `MarcoAccount.getClient()` : récupère la configuration `/api/config` puis crée le client Supabase ;
 - `MarcoAccount.currentUser()` : récupère l’utilisateur courant ;
@@ -343,7 +356,7 @@ Le projet Supabase utilisé par MARCO-XMD est le projet configuré par `SUPABASE
 
 La demande de notification Web Push a été retirée de l’accueil pour éviter les fenêtres système Android et les problèmes de superposition.
 
-Le fichier `public/app-banner.js` gère désormais une **barre d’annonce dans l’application** :
+Le fichier `frontend/public/app-banner.js` gère désormais une **barre d’annonce dans l’application** :
 
 - elle est masquée par défaut ;
 - elle s’affiche seulement si `window.MARCO_APP_BANNER.enabled === true` et qu’un texte existe ;
@@ -377,7 +390,7 @@ Les variables VAPID restent présentes dans `render.yaml` pour l’ancien systè
 
 ## 9. Video Downloader
 
-Le module `video_downloader/` utilise `yt-dlp` et FFmpeg.
+Le module `backend/video_downloader/` utilise `yt-dlp` et FFmpeg.
 
 ### Plateformes
 
@@ -404,7 +417,7 @@ Les tokens sont aléatoires et les noms de fichiers sont filtrés avant accès a
 
 ## 10. Voice Studio
 
-Le module `voice_studio/` utilise `edge-tts` et génère des fichiers MP3 temporaires.
+Le module `backend/voice_studio/` utilise `edge-tts` et génère des fichiers MP3 temporaires.
 
 ### Voix configurées
 
@@ -428,7 +441,7 @@ Le texte, la voix, le débit, le ton et le volume sont contrôlés côté serveu
 
 ## 11. Marco Lyrics
 
-Le module `marco_lyrics/` combine recherche de paroles et informations YouTube.
+Le module `backend/marco_lyrics/` combine recherche de paroles et informations YouTube.
 
 ### API
 
@@ -449,7 +462,7 @@ En cas d’échec complet, l’API renvoie une erreur HTTP 404.
 
 ## 12. Interface publique et PWA
 
-### `public/index.html`
+### `frontend/public/index.html`
 
 La page d’accueil contient :
 
@@ -470,7 +483,7 @@ La page d’accueil contient :
 
 ### Langues
 
-`public/i18n.js` prend en charge :
+`frontend/public/i18n.js` prend en charge :
 
 - français `fr` ;
 - créole haïtien `ht` ;
@@ -478,11 +491,11 @@ La page d’accueil contient :
 
 La langue est sauvegardée dans `localStorage` avec la clé `marco-lang`.
 
-`public/translations.js` contient les textes utilisés par les attributs `data-i18n`.
+`frontend/public/translations.js` contient les textes utilisés par les attributs `data-i18n`.
 
 ### Service worker
 
-`public/service-worker.js` :
+`frontend/public/service-worker.js` :
 
 - met en cache les pages principales ;
 - supprime les anciens caches lors de l’activation ;
@@ -549,7 +562,7 @@ Le serveur écoute par défaut sur le port `10000` ou sur `PORT`.
 Pour démarrer une session WhatsApp :
 
 ```bash
-node index.js 509XXXXXXXX
+node backend/index.js 509XXXXXXXX
 ```
 
 ou placer le numéro nettoyé dans le fichier `number`.
@@ -567,7 +580,7 @@ Sans numéro, seul le site web démarre.
 - le plan free ;
 - la branche `main` ;
 - le build `bash build.sh` ;
-- le démarrage `node index.js` ;
+- le démarrage `node backend/index.js` ;
 - le health check `/` ;
 - le déploiement automatique.
 
@@ -638,11 +651,11 @@ done
 
 ### Dockerfile
 
-Le déploiement Render actuel utilise `render.yaml`, `build.sh` et `node index.js`. Le `Dockerfile` est une variante historique et référence `start-all.js`. Avant de choisir un déploiement Docker, vérifier que ce fichier de démarrage existe et que le comportement est aligné avec Render.
+Le déploiement Render actuel utilise `render.yaml`, `build.sh` et `node backend/index.js`. Le `Dockerfile` est une variante disponible pour un déploiement Docker et démarre `backend/index.js`. Render utilise actuellement `render.yaml`.
 
 ### Logos
 
-L’accueil utilise les logos locaux de `public/media/`. Certaines pages de compte historiques utilisent encore une URL Postimg externe. Pour une fiabilité totale, migrer aussi ces pages vers `/media/logo512.png`.
+L’accueil utilise les logos locaux de `frontend/public/media/`. Certaines pages de compte historiques utilisent encore une URL Postimg externe. Pour une fiabilité totale, migrer aussi ces pages vers `/media/logo512.png`.
 
 ### Web Push historique
 
@@ -685,13 +698,13 @@ Maintenir MARCO-XMD comme une application web évolutive, moderne, mobile-first 
 
 - `server.js` : Express, sécurité, limites, routes et fichiers publics ;
 - `index.js` : sessions Baileys, messages, plugins, reconnexion ;
-- `public/account.js` : Supabase Auth, profil et historique ;
-- `public/app-banner.js` : annonces internes sans permission système ;
-- `video_downloader/` : yt-dlp, fichiers temporaires et nettoyage ;
-- `voice_studio/` : edge-tts, MP3 temporaires et nettoyage ;
-- `marco_lyrics/` : recherche de paroles et fallback YouTube ;
-- `template/` : plugins et événements copiés dans chaque session ;
-- `supabase/migrations/` : schéma versionné et RLS.
+- `frontend/public/account.js` : Supabase Auth, profil et historique ;
+- `frontend/public/app-banner.js` : annonces internes sans permission système ;
+- `backend/video_downloader/` : yt-dlp, fichiers temporaires et nettoyage ;
+- `backend/voice_studio/` : edge-tts, MP3 temporaires et nettoyage ;
+- `backend/marco_lyrics/` : recherche de paroles et fallback YouTube ;
+- `backend/template/` : plugins et événements copiés dans chaque session ;
+- `backend/supabase/migrations/` : schéma versionné et RLS.
 
 ## Procédure de travail
 

@@ -2,12 +2,12 @@
   "name": "marco-xmd",
   "version": "2.0.0",
   "description": "MARCO-XMD WhatsApp Bot",
-  "main": "index.js",
+  "main": "backend/index.js",
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node backend/index.js",
     "build": "bash build.sh"
   },
   "keywords": [

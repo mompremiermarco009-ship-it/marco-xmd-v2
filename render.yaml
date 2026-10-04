@@ -6,7 +6,7 @@ services:
     plan: free
     branch: main
     buildCommand: bash build.sh
-    startCommand: node index.js
+    startCommand: node backend/index.js
     healthCheckPath: /
     autoDeploy: true
     envVars:

@@ -23,7 +23,7 @@ global.addLog = (sessionID, action, description, severity = 'info') => {
 };
 
 function ensureSessionDir(sessionID) {
-    const sessionDir = path.join(__dirname, 'sessions', sessionID);
+    const sessionDir = path.join(__dirname, '..', 'sessions', sessionID);
     const templateDir = path.join(__dirname, 'template');
     if (!fs.existsSync(sessionDir)) {
         fs.copySync(templateDir, sessionDir);

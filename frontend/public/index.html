@@ -1037,7 +1037,10 @@
     transform: none !important;
 }
 </style>
-</head>
+<style>
+:root{--bg:#0a0e1a;--surface:#111827;--surface-alt:#1e293b;--surface-hover:#1f2937;--text:#f1f5f9;--text-soft:#cbd5e1;--text-muted:#64748b;--border:#1e293b;--border-hover:#334155;--primary:#3b82f6;--primary-dark:#1d4ed8;--primary-glow:rgba(59,130,246,.4);--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#06b6d4;--radius-sm:8px;--radius:12px;--radius-lg:16px;--radius-xl:20px}
+#guest-banner{display:none;margin:18px auto 0;width:min(94%,1080px);padding:12px 16px;border:1px solid rgba(245,158,11,.45);border-radius:12px;background:rgba(120,75,8,.25);color:#fde68a;align-items:center;gap:10px}#guest-banner.show{display:flex}#guest-banner a{margin-left:auto;color:#fff;background:#b45309;border-radius:8px;padding:7px 11px;text-decoration:none;font-weight:700;font-size:.85rem}.dashboard-hero{width:min(94%,1080px);margin:22px auto 0;padding:20px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(135deg,rgba(17,24,39,.98),rgba(30,41,59,.86))}.dashboard-hero h1{margin:0 0 5px;font-size:1.55rem}.dashboard-hero p{margin:0;color:var(--text-soft)}.dashboard-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.dashboard-stat{padding:12px;border:1px solid var(--border-hover);background:rgba(10,14,26,.45);border-radius:10px}.dashboard-stat strong{display:block;font-size:1.35rem;color:#fff}.dashboard-stat span{font-size:.75rem;color:var(--text-muted)}#dashboard-logout{display:none}@media(max-width:600px){.dashboard-stats{grid-template-columns:1fr 1fr}.dashboard-hero{padding:16px}}
+</style></head>
 <body>
 
 <!-- Navbar -->
@@ -1120,13 +1123,13 @@
     <div class="menu-divider"></div>
 
     <div class="menu-section-title"><span data-i18n="menu.section.tools">Outils</span></div>
-    <a href="/video_downloader/" onclick="closeMenu()">
+    <a href="/tools/video/" onclick="closeMenu()">
         <i class="fas fa-download"></i> <span data-i18n="menu.video">Video Downloader</span>
     </a>
-    <a href="/marco_lyrics/" onclick="closeMenu()">
+    <a href="/tools/lyrics/" onclick="closeMenu()">
         <i class="fas fa-music"></i> <span data-i18n="menu.lyrics">Marco Lyrics</span>
     </a>
-    <a href="/voice_studio/" onclick="closeMenu()">
+    <a href="/tools/voice/" onclick="closeMenu()">
         <i class="fas fa-wand-magic-sparkles"></i> <span data-i18n="menu.voice">Voice Studio</span>
     </a>
 
@@ -1180,6 +1183,8 @@
     </div>
 </div>
 
+<div id="guest-banner"><i class="fa-solid fa-user-secret"></i><span>Mode invité — vos données ne seront pas sauvegardées.</span><a href="/auth.html"><i class="fa-solid fa-user-plus"></i> Créer un compte</a></div>
+<div class="dashboard-hero"><h1 id="dashboard-greeting">Chargement de votre espace…</h1><p>Retrouvez vos outils MARCO-XMD depuis un seul endroit.</p><div class="dashboard-stats"><div class="dashboard-stat"><strong>4</strong><span>Outils disponibles</span></div><div class="dashboard-stat"><strong>3</strong><span>Langues</span></div><div class="dashboard-stat"><strong>24/7</strong><span>Accès web</span></div></div></div>
 <div class="container">
 
     <!-- Hero -->
@@ -1265,7 +1270,7 @@
             <p data-i18n="tools.subtitle">Découvrez nos outils gratuits et instantanés</p>
         </div>
         <div class="tools-grid">
-            <a class="tool-card" href="/video_downloader/">
+            <a class="tool-card" href="/tools/video/">
                 <div class="tool-icon blue"><i class="fas fa-download"></i></div>
                 <div class="tool-info">
                     <h3 data-i18n="tools.video.title">Video Downloader</h3>
@@ -1273,7 +1278,7 @@
                 </div>
                 <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
             </a>
-            <a class="tool-card" href="/marco_lyrics/">
+            <a class="tool-card" href="/tools/lyrics/">
                 <div class="tool-icon purple"><i class="fas fa-music"></i></div>
                 <div class="tool-info">
                     <h3 data-i18n="tools.lyrics.title">Marco Lyrics</h3>
@@ -1281,7 +1286,7 @@
                 </div>
                 <span class="tool-tag new"><i class="fas fa-sparkles"></i> Nouveau</span>
             </a>
-            <a class="tool-card" href="/voice_studio/">
+            <a class="tool-card" href="/tools/voice/">
                 <div class="tool-icon green"><i class="fas fa-wand-magic-sparkles"></i></div>
                 <div class="tool-info">
                     <h3 data-i18n="tools.voice.title">Voice Studio</h3>
@@ -1395,17 +1400,17 @@
             <p data-i18n="services.subtitle">Services additionnels bientôt disponibles</p>
         </div>
         <div class="tools-grid">
-            <a class="tool-card" href="/video_downloader/">
+            <a class="tool-card" href="/tools/video/">
                 <div class="tool-icon blue"><i class="fas fa-download"></i></div>
                 <div class="tool-info"><h3 data-i18n="tools.video.title">Video Downloader</h3><p data-i18n="tools.video.desc">Téléchargez des vidéos et audios depuis YouTube, Facebook, Instagram et TikTok.</p></div>
                 <span class="tool-tag new" data-i18n="services.available">Disponible</span>
             </a>
-            <a class="tool-card" href="/marco_lyrics/">
+            <a class="tool-card" href="/tools/lyrics/">
                 <div class="tool-icon purple"><i class="fas fa-music"></i></div>
                 <div class="tool-info"><h3 data-i18n="tools.lyrics.title">Marco Lyrics</h3><p data-i18n="tools.lyrics.desc">Trouvez les paroles de vos chansons préférées en quelques secondes.</p></div>
                 <span class="tool-tag new" data-i18n="services.available">Disponible</span>
             </a>
-            <a class="tool-card" href="/voice_studio/">
+            <a class="tool-card" href="/tools/voice/">
                 <div class="tool-icon green"><i class="fas fa-wand-magic-sparkles"></i></div>
                 <div class="tool-info"><h3 data-i18n="tools.voice.title">Voice Studio</h3><p data-i18n="tools.voice.desc">Convertissez votre texte en voix naturelle avec des voix françaises variées.</p></div>
                 <span class="tool-tag new" data-i18n="services.available">Disponible</span>
@@ -2446,5 +2451,8 @@ window.addEventListener('keydown', (e) => {
     .catch(function(){ el.textContent = '—'; });
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/account.js?v=refactor1"></script>
+<script src="/dashboard.js?v=refactor1"></script>
 </body>
 </html>
