@@ -5,6 +5,9 @@
   const greeting = document.getElementById('dashboard-greeting');
   const accountLink = document.getElementById('dashboard-account-link');
   const logout = document.getElementById('dashboard-logout');
+  const statSearch = document.getElementById('stat-search');
+  const statDownload = document.getElementById('stat-download');
+  const statVoice = document.getElementById('stat-voice');
 
   const showDashboard = (user) => {
     document.documentElement.classList.add('dashboard-ready');
@@ -22,6 +25,16 @@
     if (greeting) greeting.textContent = `Bonjour, ${user.user_metadata?.display_name || user.email?.split('@')[0] || 'utilisateur'}`;
     if (accountLink) { accountLink.href = '/profile.html'; accountLink.innerHTML = '<i class="fa-solid fa-user"></i> Mon profil'; }
     if (logout) logout.hidden = false;
+    (async () => {
+      try {
+        const client = await window.MarcoAccount.getClient();
+        const { data } = await client.from('activity_history').select('event_type').eq('user_id', user.id).limit(500);
+        const rows = data || [];
+        if (statSearch) statSearch.textContent = rows.filter(r => ['lyrics_search','search'].includes(r.event_type)).length;
+        if (statDownload) statDownload.textContent = rows.filter(r => ['video_download','download'].includes(r.event_type)).length;
+        if (statVoice) statVoice.textContent = rows.filter(r => ['voice_generate','voice'].includes(r.event_type)).length;
+      } catch {}
+    })();
   };
 
   (async () => {
