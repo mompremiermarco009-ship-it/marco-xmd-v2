@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: marco-xmd
+    name: marco-xmd-v2
     env: node
     region: oregon
     plan: free
@@ -29,4 +29,6 @@ services:
       - key: SUPABASE_URL
         value: https://btavjbuzreapisdnmetv.supabase.co
       - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: YOUTUBE_COOKIES_B64
         sync: false
