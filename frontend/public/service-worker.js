@@ -1,14 +1,18 @@
 /* MARCO-XMD — Service Worker PWA */
-const CACHE_NAME = 'marco-cache-2026-10-04-v4';
+const CACHE_NAME = 'marco-cache-2026-10-04-v5';
 const CORE_ASSETS = [
   '/',
   '/index.html',
-  '/dashboard',
-  '/dashboard.js',
   '/auth.html',
   '/profile.html',
   '/history.html',
   '/account.js',
+  '/pwa-update.js',
+  '/vendor/supabase/supabase.js',
+  '/vendor/fontawesome/css/all.min.css',
+  '/vendor/fontawesome/webfonts/fa-solid-900.woff2',
+  '/vendor/fontawesome/webfonts/fa-brands-400.woff2',
+  '/vendor/fontawesome/webfonts/fa-regular-400.woff2',
   '/admin.html',
   '/games.html',
   '/404.html',
@@ -17,9 +21,6 @@ const CORE_ASSETS = [
   '/translations.js',
   '/i18n.js',
   '/app-banner.js',
-  '/tools/video/',
-  '/tools/voice/',
-  '/tools/lyrics/',
   '/media/logo192.png',
   '/media/logo512.png'
 ];
@@ -38,6 +39,10 @@ self.addEventListener('activate', (event) => {
     )
   );
   self.clients.claim();
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('push', (event) => {
@@ -76,8 +81,8 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.pathname.startsWith('/api/') ||
       url.pathname.startsWith('/admin/') ||
-      url.pathname.startsWith('/tools/voice/tmp/') ||
-      url.pathname.startsWith('/tools/video/tmp/')) return;
+      url.pathname.startsWith('/voice_studio/tmp/') ||
+      url.pathname.startsWith('/video_downloader/tmp/')) return;
 
   event.respondWith(
     caches.match(req).then((cached) => {
