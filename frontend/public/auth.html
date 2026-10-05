@@ -18,7 +18,7 @@
       <div class="field" id="nameField" style="display:none"><label for="name">Nom affiché</label><input id="name" maxlength="80" autocomplete="name"></div>
       <div class="field"><label for="email">Adresse e-mail</label><input id="email" type="email" required autocomplete="email"></div>
       <div class="field"><label for="password">Mot de passe</label><input id="password" type="password" required minlength="6" autocomplete="current-password"></div>
-      <div id="message" class="message" data-auth-error></div>
+      <div id="message" class="message" data-auth-error aria-live="polite"></div>
       <button id="submit" class="btn" type="submit">Se connecter</button>
     </form>
     <div class="auth-options">
@@ -37,23 +37,22 @@
       const show = (text, type) => { message.textContent = text; message.className = 'message show ' + type; };
       const setMode = next => { mode = next; document.getElementById('loginTab').classList.toggle('active', mode === 'login'); document.getElementById('signupTab').classList.toggle('active', mode === 'signup'); nameField.style.display = mode === 'signup' ? 'block' : 'none'; submit.textContent = mode === 'signup' ? 'Créer mon compte' : 'Se connecter'; message.className = 'message'; };
       document.getElementById('loginTab').onclick = () => setMode('login'); document.getElementById('signupTab').onclick = () => setMode('signup');
-      (async () => { try { if (await MarcoAccount.currentUser()) location.href = '/index.html'; } catch (error) { show(error.message || MarcoAccount.CLIENT_ERROR, 'error'); } })();
-      form.onsubmit = async event => { event.preventDefault(); submit.disabled = true; show('Connexion à Supabase…', 'success'); try { const client = await MarcoAccount.getClient(); const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value; let result;
+      (async () => { try { const client = await MarcoAccount.getClient(); client.auth.onAuthStateChange((event, session) => { if (event === 'SIGNED_IN' && session) location.href = '/index.html'; }); if (await MarcoAccount.currentUser()) location.href = '/index.html'; } catch (_) {} })();
+      form.onsubmit = async event => { event.preventDefault(); submit.disabled = true; show('Connexion en cours…', 'success'); try { const client = await MarcoAccount.getClient(); const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value; let result;
           if (mode === 'signup') result = await client.auth.signUp({ email, password, options: { data: { display_name: document.getElementById('name').value.trim() } } });
           else result = await client.auth.signInWithPassword({ email, password });
           if (result.error) throw result.error;
           if (mode === 'signup' && !result.data.session) { show('Compte créé. Vérifie ton e-mail pour confirmer ton adresse.', 'success'); submit.disabled = false; return; }
           if (result.data.user) await MarcoAccount.addHistory(result.data.user.id, mode === 'signup' ? 'signup' : 'login', mode === 'signup' ? 'Compte créé' : 'Connexion', 'Accès à ton espace MARCO-XMD');
           localStorage.removeItem('marco-guest'); location.href = '/index.html';
-        } catch (error) { show(error.message || 'Une erreur est survenue.', 'error'); submit.disabled = false; }
+        } catch (error) { show(MarcoAccount.friendlyError(error), 'error'); submit.disabled = false; }
       };
       document.getElementById('guestBtn').onclick = () => { localStorage.setItem('marco-guest', 'true'); location.href = '/index.html'; };
       document.getElementById('googleBtn').onclick = async () => {
         try {
           const client = await MarcoAccount.getClient();
-          const result = await client.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + '/index.html' } });
-          if (result.error) throw result.error;
-        } catch (error) { show(error.message || MarcoAccount.CLIENT_ERROR, 'error'); }
+          await MarcoAccount.signInWithGoogle();
+        } catch (error) { show(MarcoAccount.friendlyError(error), 'error'); }
       };
     })();
   </script>
