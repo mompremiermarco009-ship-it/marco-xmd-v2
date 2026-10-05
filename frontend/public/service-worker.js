@@ -84,16 +84,6 @@ self.addEventListener('fetch', (event) => {
       url.pathname.startsWith('/voice_studio/tmp/') ||
       url.pathname.startsWith('/video_downloader/tmp/')) return;
 
-  event.respondWith(
-    caches.match(req).then((cached) => {
-      const network = fetch(req).then((res) => {
-        if (res && res.status === 200 && res.type === 'basic') {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-        }
-        return res;
-      }).catch(() => cached || caches.match('/404.html'));
-      return cached || network;
-    })
-  );
+  const networkFirst = ['/auth.html','/account.js','/vendor/supabase/supabase.js','/service-worker.js'].includes(url.pathname);
+  event.respondWith(networkFirst ? fetch(req).then(res => { if (res.ok) caches.open(CACHE_NAME).then(c => c.put(req, res.clone())); return res; }).catch(() => caches.match(req).then(c => c || caches.match('/404.html'))) : caches.match(req).then(cached => fetch(req).then(res => { if (res.ok && res.type === 'basic') caches.open(CACHE_NAME).then(c => c.put(req, res.clone())); return res; }).catch(() => cached || caches.match('/404.html')) || cached));
 });
