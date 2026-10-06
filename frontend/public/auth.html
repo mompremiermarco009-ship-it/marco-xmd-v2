@@ -24,6 +24,7 @@
     <div class="auth-options">
       <button id="googleBtn" class="secondary" type="button"><i class="fa-brands fa-google"></i> Continuer avec Google</button>
       <button id="guestBtn" class="secondary" type="button"><i class="fa-solid fa-user-secret"></i> Continuer sans compte</button>
+      <button id="logoutBtn" class="secondary" type="button" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Se déconnecter de la session actuelle</button>
     </div>
     <div class="footer"><a href="/">← Retour à l’accueil</a></div>
   </main>
@@ -37,7 +38,29 @@
       const show = (text, type) => { message.textContent = text; message.className = 'message show ' + type; };
       const setMode = next => { mode = next; document.getElementById('loginTab').classList.toggle('active', mode === 'login'); document.getElementById('signupTab').classList.toggle('active', mode === 'signup'); nameField.style.display = mode === 'signup' ? 'block' : 'none'; submit.textContent = mode === 'signup' ? 'Créer mon compte' : 'Se connecter'; message.className = 'message'; };
       document.getElementById('loginTab').onclick = () => setMode('login'); document.getElementById('signupTab').onclick = () => setMode('signup');
-      (async () => { try { const client = await MarcoAccount.getClient(); client.auth.onAuthStateChange((event, session) => { if (event === 'SIGNED_IN' && session) location.href = '/index.html'; }); if (await MarcoAccount.currentUser()) location.href = '/index.html'; } catch (_) {} })();
+      (async () => {
+        // Ne PAS rediriger si l'utilisateur a explicitement demandé à rester
+        const stay = new URLSearchParams(location.search).get('stay') === '1';
+        const isGuest = localStorage.getItem('marco-guest') === 'true';
+
+        if (stay) {
+          // Afficher un bandeau pour signaler qu'on peut se reconnecter
+          localStorage.removeItem('marco-guest');
+          return;
+        }
+
+        try {
+          const client = await MarcoAccount.getClient();
+          client.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) location.href = '/index.html';
+            if (event === 'SIGNED_OUT') localStorage.removeItem('marco-guest');
+          });
+          const user = await MarcoAccount.currentUser();
+          if (user && !isGuest) {
+            location.href = '/index.html';
+          }
+        } catch (_) {}
+      })();
       form.onsubmit = async event => { event.preventDefault(); submit.disabled = true; show('Connexion en cours…', 'success'); try { const client = await MarcoAccount.getClient(); const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value; let result;
           if (mode === 'signup') result = await client.auth.signUp({ email, password, options: { data: { display_name: document.getElementById('name').value.trim() } } });
           else result = await client.auth.signInWithPassword({ email, password });
@@ -48,6 +71,22 @@
         } catch (error) { show(MarcoAccount.friendlyError(error), 'error'); submit.disabled = false; }
       };
       document.getElementById('guestBtn').onclick = () => { localStorage.setItem('marco-guest', 'true'); location.href = '/index.html'; };
+      (async () => {
+        try {
+          const user = await MarcoAccount.currentUser();
+          if (user) {
+            const btn = document.getElementById('logoutBtn');
+            if (btn) {
+              btn.style.display = 'block';
+              btn.onclick = async () => {
+                localStorage.removeItem('marco-guest');
+                await MarcoAccount.signOut();
+              };
+            }
+          }
+        } catch (_) {}
+      })();
+
       document.getElementById('googleBtn').onclick = async () => {
         try {
           const client = await MarcoAccount.getClient();

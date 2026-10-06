@@ -1123,6 +1123,9 @@
     <div class="menu-divider"></div>
 
     <div class="menu-section-title"><span data-i18n="menu.section.tools">Outils</span></div>
+    <a href="/tools/watch/" onclick="closeMenu()">
+        <i class="fas fa-clapperboard"></i> <span>MARCO Watch</span>
+    </a>
     <a href="/tools/video/" onclick="closeMenu()">
         <i class="fas fa-download"></i> <span data-i18n="menu.video">Video Downloader</span>
     </a>
@@ -1215,28 +1218,28 @@
     <!-- ===== MARCO SMART CTA (APK <-> WEB) ===== -->
     <section class="section" id="marco-smart-cta">
         <!-- Vue WEB : telecharger l'APK -->
-        <div id="marco-cta-web" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(22, 163, 74, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
+        <div id="marco-cta-web" style="display:none; background: var(--surface); border: 1px solid rgba(22, 163, 74, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: var(--shadow-lg); text-align: center; max-width: 700px; margin: 0 auto;">
             <div style="font-size: 44px; margin-bottom: 12px;">&#128241;</div>
-            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;" data-i18n="download.title">Telecharger l'application</h3>
-            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="download.text">Telecharger l'application directement sur votre telephone</p>
+            <h3 style="color: var(--text); font-size: 19px; font-weight: 700; margin: 0 0 10px 0;" data-i18n="download.title">Telecharger l'application</h3>
+            <p style="color: var(--text-soft); font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="download.text">Telecharger l'application directement sur votre telephone</p>
             <a href="/apk/MARCO-XMD.apk" download="MARCO-XMD.apk" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);">
                 <span style="font-size: 20px;">&#11015;&#65039;</span>
                 <span data-i18n="download.button">Télécharger l'APK</span>
                 <span style="font-size: 11px; opacity: 0.85; font-weight: 400;">(4.7 Mo)</span>
             </a>
-            <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128274; Fichier signe &bull; Compatible Android 6.0+</p>
+            <p style="color: var(--text-muted); font-size: 11px; margin: 16px 0 0 0;">&#128274; Fichier signe &bull; Compatible Android 6.0+</p>
         </div>
 
         <!-- Vue APP : acceder au site web -->
-        <div id="marco-cta-app" style="display:none; background: linear-gradient(135deg, #0f1620, #1a2230); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); text-align: center; max-width: 700px; margin: 0 auto;">
+        <div id="marco-cta-app" style="display:none; background: var(--surface); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 16px; padding: 26px 22px; box-shadow: var(--shadow-lg); text-align: center; max-width: 700px; margin: 0 auto;">
             <div style="font-size: 44px; margin-bottom: 12px;">&#127760;</div>
-            <h3 style="color: #fff; font-size: 19px; font-weight: 700; margin: 0 0 10px 0;" data-i18n="access.title">Acceder au site web</h3>
-            <p style="color: #9aa7b8; font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="access.text">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
+            <h3 style="color: var(--text); font-size: 19px; font-weight: 700; margin: 0 0 10px 0;" data-i18n="access.title">Acceder au site web</h3>
+            <p style="color: var(--text-soft); font-size: 13px; margin: 0 0 20px 0; line-height: 1.5;" data-i18n="access.text">Ouvrez la version web pour profiter de toutes les fonctionnalites en plein ecran</p>
             <a href="https://marco-xmd-v2.onrender.com/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);">
                 <span style="font-size: 20px;">&#127760;</span>
                 <span data-i18n="access.button">Accéder au site</span>
             </a>
-            <p style="color: #6b7280; font-size: 11px; margin: 16px 0 0 0;">&#128241; Version web officielle &bull; Toujours a jour</p>
+            <p style="color: var(--text-muted); font-size: 11px; margin: 16px 0 0 0;">&#128241; Version web officielle &bull; Toujours a jour</p>
         </div>
     </section>
 
@@ -2237,6 +2240,17 @@ window.addEventListener('keydown', (e) => {
             transform: none !important;
             box-shadow: none !important;
         }
+
+    
+        /* Fix theme clair : notice lisible */
+        [data-theme="light"] .notice {
+            background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+            border-color: #bfdbfe;
+        }
+        [data-theme="light"] .notice-content h3 { color: #0f172a; }
+        [data-theme="light"] .notice-content p { color: #475569; }
+        [data-theme="light"] .notice-content .highlight { color: #0d6efd; }
+        [data-theme="light"] .notice-icon { background: #0d6efd; color: #fff; }
 
     </style>
 
