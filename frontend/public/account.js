@@ -25,7 +25,7 @@
   function browserSDK() { if (window.supabase?.createClient) return window.supabase; try { if (typeof supabase !== 'undefined' && supabase?.createClient) { window.supabase = supabase; return supabase; } } catch (_) {} return null; }
   async function ensureSupabaseSDK() {
     const existing = browserSDK(); if (existing) return existing;
-    if (!sdkPromise) sdkPromise = (async () => { for (const src of ['/vendor/supabase/supabase.js', 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2', 'https://unpkg.com/@supabase/supabase-js@2']) { try { await loadScript(src); const sdk = browserSDK(); if (sdk) return sdk; } catch (_) {} } throw new Error('service_unavailable'); })();
+    if (!sdkPromise) sdkPromise = (async () => { for (const src of ['/vendor/supabase/supabase.js']) { try { await loadScript(src); const sdk = browserSDK(); if (sdk) return sdk; } catch (_) {} } throw new Error('service_unavailable'); })();
     return sdkPromise;
   }
   async function getClient() {
