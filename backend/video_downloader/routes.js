@@ -18,6 +18,15 @@ if (fs.existsSync(pluginsDir)) {
 }
 
 // ─── Utils ───
+// Normalise l'URL de la miniature YouTube : force le format JPG
+// (les WebP ne s'affichent pas sur certains navigateurs Android)
+function normalizeThumbnail(url) {
+    if (!url) return '';
+    return String(url)
+        .replace(/\/vi_webp\//, '/vi/')
+        .replace(/\.webp($|\?)/i, '.jpg$1');
+}
+
 function fmtDuration(sec) {
     if (!sec && sec !== 0) return '—';
     const s = Math.floor(sec % 60);
@@ -57,7 +66,7 @@ router.get('/api/video/info', async (req, res) => {
         const info = await ytdlp.getInfo(url);
         res.json({
             title: info.title || 'Vidéo',
-            thumbnail: info.thumbnail || (info.thumbnails?.slice(-1)[0]?.url ?? ''),
+            thumbnail: normalizeThumbnail(info.thumbnail || (info.thumbnails?.slice(-1)[0]?.url ?? '')),
             duration: fmtDuration(info.duration),
             views: fmtViews(info.view_count),
             author: info.uploader || info.channel || info.creator || '—',

@@ -4,6 +4,88 @@
 
 let currentLyrics = null;
 
+// ═══════════════════════════════════════════════════════════
+//  MARCO-XMD — Lecture musicale (mini-player YouTube)
+// ═══════════════════════════════════════════════════════════
+
+let lyricsPlayerOpen = false;
+let currentYoutubeId = null;
+
+// Extrait l'ID video d'une URL YouTube
+function extractYoutubeId(url) {
+    if (!url) return null;
+    // Formats supportes :
+    //   https://www.youtube.com/watch?v=XXXX
+    //   https://youtu.be/XXXX
+    //   https://m.youtube.com/watch?v=XXXX
+    //   https://www.youtube.com/embed/XXXX
+    const patterns = [
+        /[?&]v=([A-Za-z0-9_-]{11})/,
+        /youtu\.be\/([A-Za-z0-9_-]{11})/,
+        /youtube\.com\/embed\/([A-Za-z0-9_-]{11})/,
+        /youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/
+    ];
+    for (const re of patterns) {
+        const m = String(url).match(re);
+        if (m && m[1]) return m[1];
+    }
+    return null;
+}
+
+// Ouvre le mini-lecteur
+function toggleLyricsPlay() {
+    const wrap = document.getElementById('lyricsThumbWrap');
+    const iframe = document.getElementById('lyrics-yt-iframe');
+    const icon = document.getElementById('lyrics-play-icon');
+    const overlay = document.getElementById('lyrics-play-overlay');
+    const player = document.getElementById('lyrics-mini-player');
+
+    if (!currentLyrics) {
+        toast('Recherchez une chanson d\'abord', 'error');
+        return;
+    }
+
+    const videoId = currentYoutubeId || extractYoutubeId(currentLyrics.url);
+
+    if (!videoId) {
+        toast('Audio non disponible pour cette chanson', 'error');
+        return;
+    }
+
+    if (!lyricsPlayerOpen) {
+        // Demarrer la lecture
+        const src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&modestbranding=1';
+        iframe.src = src;
+
+        // Remplir les infos
+        document.getElementById('lmp-title').textContent = currentLyrics.title || '—';
+        document.getElementById('lmp-artist').textContent = currentLyrics.artist || '—';
+
+        player.classList.add('show');
+        icon.className = 'fas fa-pause';
+        overlay.classList.add('playing');
+        lyricsPlayerOpen = true;
+    } else {
+        stopLyricsPlay();
+    }
+}
+
+// Ferme le mini-lecteur
+function stopLyricsPlay() {
+    const iframe = document.getElementById('lyrics-yt-iframe');
+    const icon = document.getElementById('lyrics-play-icon');
+    const overlay = document.getElementById('lyrics-play-overlay');
+    const player = document.getElementById('lyrics-mini-player');
+
+    iframe.src = '';
+    player.classList.remove('show');
+    icon.className = 'fas fa-play';
+    overlay.classList.remove('playing');
+    lyricsPlayerOpen = false;
+}
+
+
+
 function toggleTheme() {
     const cur = document.documentElement.getAttribute('data-theme');
     const next = cur === 'dark' ? 'light' : 'dark';
@@ -73,6 +155,10 @@ async function searchLyrics() {
     loading.classList.add('show');
     btn.disabled = true;
     currentLyrics = null;
+    currentYoutubeId = null;
+
+    // Fermer le lecteur s'il est ouvert
+    if (typeof stopLyricsPlay === 'function') stopLyricsPlay();
 
     try {
         const res = await fetch(`/api/lyrics/search?q=${encodeURIComponent(query)}`);
@@ -81,6 +167,9 @@ async function searchLyrics() {
         if (!res.ok) throw new Error(data.error || 'Aucune parole trouvée');
 
         const v = data.video || {};
+
+        // Extraire l'ID YouTube pour la lecture
+        currentYoutubeId = extractYoutubeId(v.url || '');
 
         // Sauvegarder pour copie/téléchargement/partage
         currentLyrics = {
@@ -194,6 +283,12 @@ function shareWhatsApp() {
     window.open(url, '_blank');
     toast('📱 Ouverture de WhatsApp...', 'success');
 }
+
+
+
+// Exposition des fonctions au scope global pour les onclick du HTML
+window.toggleLyricsPlay = toggleLyricsPlay;
+window.stopLyricsPlay = stopLyricsPlay;
 
 // Recherche auto si ?q= dans l'URL
 window.addEventListener('load', () => {

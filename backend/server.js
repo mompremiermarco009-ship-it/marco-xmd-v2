@@ -27,6 +27,7 @@ app.use(
                 objectSrc: ["'none'"],
                 frameAncestors: ["'self'"],
                 scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://unpkg.com", "https://esm.sh"],
+                frameSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"],
                 scriptSrcAttr: ["'unsafe-inline'"],
                 styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
                 fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "data:"],
@@ -258,6 +259,9 @@ const startServer = (startBotFunc, sessionsMap) => {
     app.get("/voice_studio.html", (req, res) => res.redirect("/tools/voice/"));
 
     app.use(generalApiLimiter, require("./marco_lyrics/routes.js"));
+    app.use(generalApiLimiter, require("./watch/routes.js"));
+    app.use("/tools/watch", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "watch")));
+    app.get("/watch.html", (req, res) => res.redirect("/tools/watch/"));
     app.use("/tools/lyrics", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "lyrics")));
     app.use("/marco_lyrics", express.static(path.join(__dirname, "..", "frontend", "public", "tools", "lyrics")));
     app.get("/marco_lyrics.html", (req, res) => res.redirect("/tools/lyrics/"));

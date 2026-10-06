@@ -70,7 +70,7 @@
   <div class="video-result" id="videoResult">
     <div class="card">
       <div class="video-preview">
-        <img id="videoThumb" src="" alt="Miniature" onerror="this.style.display='none'">
+        <img id="videoThumb" src="" alt="Miniature" onerror="handleThumbError(this)">
         <div class="video-info">
           <h3 id="videoTitle">—</h3>
           <div class="vi-meta">
@@ -178,5 +178,24 @@
 <div class="toast" id="toast"></div>
 <script src="./app.js?v=21"></script>
 <script src="/pwa-update.js?v=20261004v5"></script>
+
+<script>
+window.handleThumbError = function(img) {
+  var src = img.src || '';
+  if (src.includes('maxresdefault')) {
+    img.src = src.replace('maxresdefault', 'hqdefault');
+    return;
+  }
+  if (src.includes('hqdefault')) {
+    img.src = src.replace('hqdefault', 'mqdefault');
+    return;
+  }
+  if (src.endsWith('.webp')) {
+    img.src = src.replace(/\.webp$/, '.jpg').replace('/vi_webp/', '/vi/');
+    return;
+  }
+  img.style.display = 'none';
+};
+</script>
 </body>
 </html>

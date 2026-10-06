@@ -307,3 +307,199 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         font-size: 0.9rem;
     }
 }
+
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  MARCO-XMD — Bouton Play sur la miniature                   */
+/* ═══════════════════════════════════════════════════════════ */
+
+.lyrics-thumb-wrap {
+    position: relative;
+    cursor: pointer;
+}
+
+.lyrics-play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.38);
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease;
+    border-radius: inherit;
+    font-family: inherit;
+}
+
+.lyrics-play-overlay:hover {
+    background: rgba(0, 0, 0, 0.52);
+}
+
+.lyrics-play-overlay:active {
+    transform: scale(0.96);
+}
+
+.lyrics-play-overlay i {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    transition: transform 0.2s ease;
+}
+
+.lyrics-play-overlay.playing {
+    background: rgba(13, 110, 253, 0.72);
+}
+
+.lyrics-play-overlay.playing i {
+    transform: scale(0.9);
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  Mini-lecteur YouTube                                       */
+/* ═══════════════════════════════════════════════════════════ */
+
+.lyrics-mini-player {
+    display: none;
+    background: #0a0e1a;
+    border-bottom: 1px solid #1e293b;
+    padding: 12px;
+    animation: lmpSlideDown 0.35s ease-out;
+}
+
+.lyrics-mini-player.show {
+    display: block;
+}
+
+@keyframes lmpSlideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.lmp-inner {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.lmp-video {
+    width: 160px;
+    height: 90px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+.lmp-video iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+.lmp-info {
+    flex: 1;
+    min-width: 0;
+    color: #f1f5f9;
+}
+
+.lmp-status {
+    font-size: 0.68rem;
+    color: #3b82f6;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lmp-pulse {
+    width: 7px;
+    height: 7px;
+    background: #3b82f6;
+    border-radius: 50%;
+    animation: lmpPulse 1.2s infinite;
+    flex-shrink: 0;
+}
+
+@keyframes lmpPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.4; transform: scale(1.35); }
+}
+
+.lmp-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.lmp-artist {
+    font-size: 0.76rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lmp-close {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #94a3b8;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    transition: background 0.2s, color 0.2s;
+    font-family: inherit;
+}
+
+.lmp-close:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+/* Theme clair */
+[data-theme="light"] .lyrics-mini-player {
+    background: #f1f5f9;
+    border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .lmp-info { color: #0f172a; }
+[data-theme="light"] .lmp-artist { color: #64748b; }
+[data-theme="light"] .lmp-close {
+    background: rgba(0, 0, 0, 0.05);
+    color: #64748b;
+}
+[data-theme="light"] .lmp-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+}
+
+/* Responsive mobile */
+@media (max-width: 500px) {
+    .lmp-video {
+        width: 130px;
+        height: 74px;
+    }
+    .lmp-title { font-size: 0.8rem; }
+    .lmp-artist { font-size: 0.72rem; }
+}
+
+@media (max-width: 380px) {
+    .lmp-video {
+        width: 110px;
+        height: 62px;
+    }
+}

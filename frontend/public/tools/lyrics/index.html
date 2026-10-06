@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="/media/logo512.png">
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=1">
+<link rel="stylesheet" href="./style.css?v=2">
 <script>
 (function(){
   var s = localStorage.getItem('marco-theme');
@@ -84,14 +84,40 @@
 
       <!-- Infos chanson avec image réduite + texte à côté -->
       <div class="song-header">
-        <div class="lyrics-thumb-wrap" id="lyricsThumbWrap" style="display:none;">
+        <div class="lyrics-thumb-wrap" id="lyricsThumbWrap" style="display:none;" onclick="toggleLyricsPlay()">
           <img id="lyricsThumb" class="lyrics-thumb" alt="Miniature">
+          <button class="lyrics-play-overlay" id="lyrics-play-overlay" type="button" aria-label="Ecouter la musique" title="Ecouter la musique">
+            <i class="fas fa-play" id="lyrics-play-icon"></i>
+          </button>
         </div>
         <div class="song-info">
           <div class="song-title" id="lyricsTitle">—</div>
           <div class="song-artist" id="lyricsArtist">—</div>
           <div class="song-video-meta" id="lyricsVideoMeta"></div>
           <div class="song-meta" id="lyricsMeta"></div>
+        </div>
+      </div>
+
+      <!-- Mini-lecteur YouTube -->
+      <div class="lyrics-mini-player" id="lyrics-mini-player">
+        <div class="lmp-inner">
+          <div class="lmp-video">
+            <iframe id="lyrics-yt-iframe"
+                    src=""
+                    data-src=""
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen></iframe>
+          </div>
+          <div class="lmp-info">
+            <div class="lmp-status">
+              <span class="lmp-pulse"></span> <span>En lecture</span>
+            </div>
+            <div class="lmp-title" id="lmp-title">—</div>
+            <div class="lmp-artist" id="lmp-artist">—</div>
+          </div>
+          <button class="lmp-close" type="button" onclick="stopLyricsPlay()" aria-label="Arreter" title="Arreter">
+            <i class="fas fa-xmark"></i>
+          </button>
         </div>
       </div>
 
@@ -151,7 +177,7 @@
 </footer>
 
 <div class="toast" id="toast"></div>
-<script src="./app.js?v=1"></script>
+<script src="./app.js?v=2"></script>
 <script src="/pwa-update.js?v=20261004v5"></script>
 </body>
 </html>

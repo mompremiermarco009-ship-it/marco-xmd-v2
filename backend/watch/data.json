@@ -1,0 +1,53 @@
+{
+  "sections": [
+    {
+      "id": "live",
+      "title": "En direct",
+      "icon": "fa-circle",
+      "iconColor": "#ef4444",
+      "layout": "row",
+      "items": [
+        { "id": "jfKfPfyJRdk", "title": "Lofi Girl — beats to relax", "channel": "Lofi Girl · 42K", "live": true },
+        { "id": "21X5lGlDOfg", "title": "NASA Live — Earth from Space", "channel": "NASA", "live": true },
+        { "id": "gCNeDWCI0vo", "title": "Al Jazeera English", "channel": "Al Jazeera", "live": true }
+      ]
+    },
+    {
+      "id": "films",
+      "title": "Films gratuits",
+      "icon": "fa-film",
+      "iconColor": "#8b5cf6",
+      "layout": "grid",
+      "items": [
+        { "id": "Av6B7n5Y7g8", "title": "Nosferatu (1922)", "channel": "Domaine Public", "duration": "1:34:22", "badge": "hd" },
+        { "id": "1o0Q5S9JcOo", "title": "Metropolis (1927)", "channel": "Cinéma classique", "duration": "2:33:11", "badge": "hd" },
+        { "id": "Lsy6fgFbFvc", "title": "Le Voyage dans la Lune", "channel": "Georges Méliès", "duration": "0:13:00", "badge": "top" },
+        { "id": "M7lc1UVf-VE", "title": "Les Temps Modernes", "channel": "Charlie Chaplin", "duration": "1:27:15", "badge": "hd" }
+      ]
+    },
+    {
+      "id": "documentaires",
+      "title": "Documentaires",
+      "icon": "fa-newspaper",
+      "iconColor": "#10b981",
+      "layout": "row",
+      "items": [
+        { "id": "wX78iKhInsc", "title": "Planète Terre — Épisode 1", "channel": "BBC Earth", "duration": "48:22", "badge": "new" },
+        { "id": "wJyUtbn0O5Y", "title": "Cosmos — L'histoire de l'univers", "channel": "National Geographic", "duration": "52:10" },
+        { "id": "1iIZeIy7TqM", "title": "Océans — Le monde du silence", "channel": "Arte", "duration": "1:02:44" }
+      ]
+    },
+    {
+      "id": "musique",
+      "title": "Clips musicaux",
+      "icon": "fa-music",
+      "iconColor": "#ec4899",
+      "layout": "row",
+      "items": [
+        { "id": "dQw4w9WgXcQ", "title": "Never Gonna Give You Up", "channel": "Rick Astley", "duration": "3:33", "badge": "top" },
+        { "id": "kJQP7kiw5Fk", "title": "Despacito", "channel": "Luis Fonsi", "duration": "4:42" },
+        { "id": "JGwWNGJdvx8", "title": "Shape of You", "channel": "Ed Sheeran", "duration": "4:24" }
+      ]
+    }
+  ]
+}
