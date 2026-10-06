@@ -37,11 +37,33 @@
     })();
   };
 
+  // Attend que MarcoAccount soit disponible (max 3s)
+  const waitForAccount = (maxWait = 3000) => new Promise((resolve) => {
+    const start = Date.now();
+    const check = () => {
+      if (window.MarcoAccount && typeof window.MarcoAccount.currentUser === 'function') {
+        resolve(window.MarcoAccount);
+      } else if (Date.now() - start > maxWait) {
+        resolve(null);
+      } else {
+        setTimeout(check, 100);
+      }
+    };
+    check();
+  });
+
   (async () => {
     try {
-      const user = await window.MarcoAccount?.currentUser();
+      const account = await waitForAccount();
+      if (!account) {
+        console.warn('[dashboard] MarcoAccount non disponible');
+        showDashboard(null);
+        return;
+      }
+      const user = await account.currentUser();
       showDashboard(user);
-    } catch {
+    } catch (err) {
+      console.error('[dashboard]', err);
       showDashboard(null);
     }
   })();
