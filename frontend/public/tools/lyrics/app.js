@@ -54,7 +54,7 @@ function toggleLyricsPlay() {
 
     if (!lyricsPlayerOpen) {
         // Demarrer la lecture
-        const src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&playsinline=1&origin=' + encodeURIComponent(location.origin);
+        const src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&playsinline=1&origin=' + encodeURIComponent(location.origin);
         iframe.src = src;
 
         // Remplir les infos
