@@ -3,6 +3,14 @@ const axios = require('axios');
 const yts = require('yt-search');
 
 // Normalise une chaîne (sans accents, minuscules)
+// Normalise l'URL de la miniature YouTube : force le format JPG
+function normalizeThumbnail(url) {
+    if (!url) return '';
+    return String(url)
+        .replace(/\/vi_webp\//, '/vi/')
+        .replace(/\.webp($|\?)/i, '.jpg$1');
+}
+
 function normalizeText(str) {
     return String(str)
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -79,7 +87,7 @@ async function searchYouTube(query) {
             title,
             artist,
             originalTitle: rawTitle,
-            thumbnail: video.thumbnail || '',
+            thumbnail: normalizeThumbnail(video.thumbnail || ''),
             duration: video.timestamp || '',
             views: video.views || 0,
             url: video.url || '',

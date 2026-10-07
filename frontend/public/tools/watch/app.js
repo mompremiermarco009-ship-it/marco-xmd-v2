@@ -197,7 +197,7 @@ const Player = {
   open(id, title, channel) {
     if (!id) return;
     State.currentPlayer = { id, title, channel };
-    this.frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+    this.frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&playsinline=1&origin=${encodeURIComponent(location.origin)}`;
     $('#playerTitle').textContent = title;
     $('#playerChannel').textContent = channel;
     this.modal.setAttribute('aria-hidden', 'false');
