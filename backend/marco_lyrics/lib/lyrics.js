@@ -151,29 +151,59 @@ function pickBestLyrics(candidates) {
 }
 
 // Verifie si le resultat lrclib correspond au titre + artiste cibles
+// Verifie si tous les mots importants du titre cible sont dans le titre candidat
+function allWordsMatch(haystack, needles, minWords = 2) {
+    if (!haystack || !needles) return false;
+    const words = needles.split(/\s+/).filter(w => w.length > 2); // ignore "le", "la", "de"...
+    if (words.length < minWords) return false;
+    const hits = words.filter(w => haystack.includes(w)).length;
+    return hits / words.length >= 0.8; // 80% des mots doivent matcher
+}
+
+// Verifie si le resultat lrclib correspond au titre + artiste cibles
 function matchesTitleArtist(item, targetTitle, targetArtist) {
     if (!item) return false;
-    const itemTitle = normalizeText(item.trackName || '');
-    const itemArtist = normalizeText(item.artistName || '');
+
+    const rawItemTitle = String(item.trackName || item.name || '');
+    const rawItemArtist = String(item.artistName || '');
+
+    const itemTitle = normalizeText(rawItemTitle);
+    const itemArtist = normalizeText(rawItemArtist);
     const tTitle = normalizeText(targetTitle || '');
     const tArtist = normalizeText(targetArtist || '');
 
     if (!itemTitle || !tTitle) return false;
 
-    // Le titre doit matcher (l'un contient l'autre)
-    const titleMatch = itemTitle === tTitle
-                    || itemTitle.includes(tTitle)
-                    || tTitle.includes(itemTitle);
+    // Méthode 1 : match direct (inchangé)
+    const directMatch = itemTitle === tTitle
+                     || itemTitle.includes(tTitle)
+                     || tTitle.includes(itemTitle);
 
-    if (!titleMatch) return false;
+    // Méthode 2 : tous les mots du titre sont présents (plus tolérant)
+    const wordMatch = allWordsMatch(itemTitle, tTitle, 2);
 
-    // Si on a un artiste cible, il doit matcher aussi
+    // Méthode 3 : le titre cible contient un mot clé majeur du résultat
+    const reverseWordMatch = allWordsMatch(tTitle, itemTitle, 2);
+
+    if (!directMatch && !wordMatch && !reverseWordMatch) return false;
+
+    // Verifier l'artiste si specifie
     if (tArtist) {
+        const artistWords = tArtist.split(/\s+/).filter(w => w.length > 2);
+        const firstArtistWord = artistWords[0] || tArtist.split(' ')[0];
+
         const artistMatch = itemArtist === tArtist
                          || itemArtist.includes(tArtist)
                          || tArtist.includes(itemArtist)
-                         || itemArtist.indexOf(tArtist.split(' ')[0]) !== -1;
-        if (!artistMatch) return false;
+                         || (firstArtistWord && itemArtist.includes(firstArtistWord));
+
+        // Si l'artiste ne matche pas du tout, on accepte quand meme si le titre matche bien
+        // (car YouTube peut avoir mis "ZAYN" en premier dans le titre)
+        if (!artistMatch) {
+            // Verifier que le titre matche TRES bien au moins
+            const strictTitle = itemTitle === tTitle || itemTitle.includes(tTitle) || tTitle.includes(itemTitle);
+            if (!strictTitle) return false;
+        }
     }
 
     return true;
