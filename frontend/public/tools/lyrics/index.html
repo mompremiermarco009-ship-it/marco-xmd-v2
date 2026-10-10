@@ -85,7 +85,7 @@
       <!-- Infos chanson avec image réduite + texte à côté -->
       <div class="song-header">
         <div class="lyrics-thumb-wrap" id="lyricsThumbWrap" style="display:none;" onclick="toggleLyricsPlay()">
-          <img id="lyricsThumb" class="lyrics-thumb" alt="Miniature">
+          <img id="lyricsThumb" class="lyrics-thumb" alt="Miniature" onerror="marcoThumbFallback(this)">
           <button class="lyrics-play-overlay" id="lyrics-play-overlay" type="button" aria-label="Ecouter la musique" title="Ecouter la musique">
             <i class="fas fa-play" id="lyrics-play-icon"></i>
           </button>
@@ -180,5 +180,29 @@
 <div class="toast" id="toast"></div>
 <script src="./app.js?v=2"></script>
 <script src="/pwa-update.js?v=20261004v5"></script>
+
+<script>
+/* Fallback thumbnail YouTube : essaie plusieurs tailles */
+window.marcoThumbFallback = function(img) {
+  var src = img.src || '';
+  if (src.includes('maxresdefault')) {
+    img.src = src.replace('maxresdefault', 'sddefault');
+    return;
+  }
+  if (src.includes('sddefault')) {
+    img.src = src.replace('sddefault', 'hqdefault');
+    return;
+  }
+  if (src.includes('hqdefault')) {
+    img.src = src.replace('hqdefault', 'mqdefault');
+    return;
+  }
+  if (src.includes('mqdefault')) {
+    img.src = src.replace('mqdefault', 'default');
+    return;
+  }
+  img.style.opacity = '0.3';
+};
+</script>
 </body>
 </html>

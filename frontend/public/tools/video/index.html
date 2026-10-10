@@ -70,7 +70,7 @@
   <div class="video-result" id="videoResult">
     <div class="card">
       <div class="video-preview">
-        <img id="videoThumb" src="" alt="Miniature" onerror="handleThumbError(this)">
+        <img id="videoThumb" src="" alt="Miniature" onerror="marcoThumbFallback(this)">
         <div class="video-info">
           <h3 id="videoTitle">—</h3>
           <div class="vi-meta">
@@ -195,6 +195,29 @@ window.handleThumbError = function(img) {
     return;
   }
   img.style.display = 'none';
+};
+</script>
+
+<script>
+window.marcoThumbFallback = function(img) {
+  var src = img.src || '';
+  if (src.includes('maxresdefault')) {
+    img.src = src.replace('maxresdefault', 'sddefault');
+    return;
+  }
+  if (src.includes('sddefault')) {
+    img.src = src.replace('sddefault', 'hqdefault');
+    return;
+  }
+  if (src.includes('hqdefault')) {
+    img.src = src.replace('hqdefault', 'mqdefault');
+    return;
+  }
+  if (src.includes('mqdefault')) {
+    img.src = src.replace('mqdefault', 'default');
+    return;
+  }
+  img.style.opacity = '0.3';
 };
 </script>
 </body>
