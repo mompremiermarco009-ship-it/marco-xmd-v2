@@ -35,7 +35,7 @@ function extractYoutubeId(url) {
 // Ouvre le mini-lecteur
 function toggleLyricsPlay() {
     const wrap = document.getElementById('lyricsThumbWrap');
-    const iframe = document.getElementById('lyrics-yt-iframe');
+    const iframe = document.getElementById('lyrics-yt-video');
     const icon = document.getElementById('lyrics-play-icon');
     const overlay = document.getElementById('lyrics-play-overlay');
     const player = document.getElementById('lyrics-mini-player');
@@ -54,7 +54,7 @@ function toggleLyricsPlay() {
 
     if (!lyricsPlayerOpen) {
         // Demarrer la lecture
-        const src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&playsinline=1&origin=' + encodeURIComponent(location.origin);
+        const src = '/api/watch/stream?id=' + videoId + '&t=' + Date.now();
         iframe.src = src;
 
         // Remplir les infos
@@ -72,12 +72,12 @@ function toggleLyricsPlay() {
 
 // Ferme le mini-lecteur
 function stopLyricsPlay() {
-    const iframe = document.getElementById('lyrics-yt-iframe');
+    const iframe = document.getElementById('lyrics-yt-video');
     const icon = document.getElementById('lyrics-play-icon');
     const overlay = document.getElementById('lyrics-play-overlay');
     const player = document.getElementById('lyrics-mini-player');
 
-    iframe.src = '';
+    try { iframe.pause(); } catch(e) {} iframe.removeAttribute('src'); try { iframe.load(); } catch(e) {}
     player.classList.remove('show');
     icon.className = 'fas fa-play';
     overlay.classList.remove('playing');

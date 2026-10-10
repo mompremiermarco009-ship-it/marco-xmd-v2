@@ -115,12 +115,12 @@
 <div class="player-modal" id="playerModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="playerTitle">
   <div class="player-box" id="playerBox">
     <div class="player-video">
-      <iframe id="playerFrame"
-              src=""
-              title="Lecteur vidéo"
-              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              allowfullscreen
-              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <video id="playerVideo"
+              controls
+              autoplay
+              playsinline
+              preload="metadata"
+              style="width:100%;height:100%;background:#000;display:block;"></video>
 
       <div class="player-overlay-controls">
         <button class="overlay-btn" id="btnRotate" aria-label="Rotation paysage" aria-pressed="false" title="Rotation paysage">

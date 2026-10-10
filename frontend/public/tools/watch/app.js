@@ -153,7 +153,7 @@ const Player = {
   init() {
     this.modal = $('#playerModal');
     this.box = $('#playerBox');
-    this.frame = $('#playerFrame');
+    this.frame = $('#playerVideo');
     this.btnFs = $('#btnFullscreen');
     this.btnRotate = $('#btnRotate');
     this.iconFs = $('#fsIcon');
@@ -197,7 +197,7 @@ const Player = {
   open(id, title, channel) {
     if (!id) return;
     State.currentPlayer = { id, title, channel };
-    this.frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&playsinline=1&origin=${encodeURIComponent(location.origin)}`;
+    this.frame.src = '/api/watch/stream?id=' + id + '&t=' + Date.now();
     $('#playerTitle').textContent = title;
     $('#playerChannel').textContent = channel;
     this.modal.setAttribute('aria-hidden', 'false');
@@ -211,7 +211,9 @@ const Player = {
     if (screen.orientation?.lock) screen.orientation.lock('landscape').catch(() => {});
   },
   close() {
+    try { this.frame.pause(); } catch(e) {}
     this.frame.src = '';
+    this.frame.removeAttribute('src');
     this.modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     this.resetMode();
