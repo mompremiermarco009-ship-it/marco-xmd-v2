@@ -1079,7 +1079,7 @@
                 <i class="fas fa-gamepad"></i>
                 <span data-i18n="nav.games">Jeux</span>
             </a>
-            <a class="nav-btn primary" href="/auth.html">
+            <a class="nav-btn primary" href="/auth.html" id="navbar-account-btn">
                 <i class="fas fa-user"></i>
                 <span data-i18n="account.nav">Mon compte</span>
             </a>
@@ -2482,5 +2482,19 @@ window.addEventListener('keydown', (e) => {
 <script src="/account.js?v=20261005"></script>
 <script src="/dashboard.js?v=refactor1"></script>
 <script src="/pwa-update.js?v=20261004v5"></script>
+
+<script>
+/* navbar-account-sync : met à jour le lien "Mon compte" selon la session */
+(async function() {
+  if (typeof MarcoAccount === 'undefined') return;
+  try {
+    const user = await MarcoAccount.currentUser();
+    const btn = document.getElementById('navbar-account-btn');
+    if (btn && user) {
+      btn.href = '/profile.html';
+    }
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>

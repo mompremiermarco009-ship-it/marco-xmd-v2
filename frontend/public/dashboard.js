@@ -18,7 +18,9 @@
       return;
     }
     if (!user) {
-      window.location.replace('/auth.html');
+      // Ne pas rediriger en boucle : juste marquer comme non connecté
+      // L'utilisateur peut cliquer sur "Mon compte" pour se connecter
+      if (greeting) greeting.textContent = 'Bienvenue';
       return;
     }
     localStorage.removeItem('marco-guest');
