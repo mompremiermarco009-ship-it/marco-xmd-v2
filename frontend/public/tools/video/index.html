@@ -83,9 +83,50 @@
       <h4 class="format-title">Choisissez le format</h4>
       <p class="format-subtitle">Le fichier sera téléchargé directement sur votre appareil.</p>
       <div class="format-grid">
-        <button class="format-btn" onclick="downloadVideo('mp4','720')">
+        <button class="format-btn" onclick="downloadVideo('auto')">
+          <i class="fas fa-magic"></i>
+          <div class="fb-label">MP4 Auto</div>
+          <div class="fb-size">Meilleure qualité</div>
+        </button>
+        <button class="format-btn" onclick="downloadVideo('1080')">
           <i class="fas fa-video"></i>
-          <div class="fb-label">MP4 HD</div>
+          <div class="fb-label">MP4 1080p</div>
+          <div class="fb-size">Full HD</div>
+        </button>
+        <button class="format-btn" onclick="downloadVideo('720')">
+          <i class="fas fa-video"></i>
+          <div class="fb-label">MP4 720p</div>
+          <div class="fb-size">HD</div>
+        </button>
+        <button class="format-btn" onclick="downloadVideo('mp3')">
+          <i class="fas fa-music"></i>
+          <div class="fb-label">MP3 Audio</div>
+          <div class="fb-size">320 kbps</div>
+        </button>
+      </div>
+
+      <!-- Barre de progression -->
+      <div class="progress-box" id="progressBox" style="display:none;">
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <div class="progress-info">
+          <span id="progressPercent">0%</span>
+          <span id="progressSpeed"></span>
+          <span id="progressEta"></span>
+        </div>
+      </div>
+
+      <!-- Preview box -->
+      <div class="preview-box" id="previewBox" style="display:none;">
+        <h3><i class="fas fa-circle-check" style="color:#22c55e;"></i> Téléchargement prêt</h3>
+        <p id="previewInfo" class="preview-info"></p>
+        <video id="previewVideo" controls playsinline style="display:none;"></video>
+        <audio id="previewAudio" controls style="display:none;"></audio>
+        <a id="saveBtn" class="save-btn" href="#" download>
+          <i class="fas fa-download"></i> Enregistrer sur mon appareil
+        </a>
+      </div>
           <div class="fb-size">720p · Vidéo</div>
         </button>
         <button class="format-btn" onclick="downloadVideo('mp4','360')">

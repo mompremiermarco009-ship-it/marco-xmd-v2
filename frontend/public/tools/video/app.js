@@ -52,7 +52,11 @@ async function analyzeVideo() {
         const data = await res.json();
 
         document.getElementById('videoThumb').style.display = '';
-        document.getElementById('videoThumb').src = data.thumbnail || '';
+        const thumbUrl = data.thumbnail || '';
+        const needProxy = thumbUrl.includes('tiktokcdn') || thumbUrl.includes('tikcdn') || thumbUrl.includes('cdninstagram') || thumbUrl.includes('fbcdn');
+        document.getElementById('videoThumb').src = needProxy
+            ? '/api/video/thumb?url=' + encodeURIComponent(thumbUrl)
+            : thumbUrl;
         document.getElementById('videoTitle').textContent = data.title || 'Vidéo';
         document.getElementById('videoDuration').textContent = data.duration || '—';
         document.getElementById('videoViews').textContent = data.views || '—';
@@ -74,59 +78,144 @@ async function analyzeVideo() {
     }
 }
 
-async function downloadVideo(format, quality) {
-    if (!currentVideo) return toast('Analysez d\'abord la vidéo', 'error');
+let currentJobId = null;
+
+async function downloadVideo(format) {
+    if (!currentVideo) return toast('Analysez d\'abord la video', 'error');
 
     const url = document.getElementById('videoUrl').value.trim();
 
-    // Afficher un message de chargement
-    const dlResult = document.getElementById('downloadResult');
-    dlResult.classList.remove('show');
-    document.getElementById('loading').classList.add('show');
-    document.querySelector('#loading p').textContent = `Téléchargement en cours (${format.toUpperCase()} ${quality})... Ceci peut prendre quelques instants.`;
+    // Reset UI
+    document.getElementById('downloadResult').classList.remove('show');
+    document.getElementById('previewBox').style.display = 'none';
+    document.getElementById('progressBox').style.display = 'block';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressPercent').textContent = '0%';
+    document.getElementById('progressSpeed').textContent = '';
+    document.getElementById('progressEta').textContent = '';
+    document.querySelectorAll('.format-btn').forEach(b => b.disabled = true);
+
+    // Ghost progress
+    let ghostPercent = 0;
+    const ghostInterval = setInterval(() => {
+        if (ghostPercent < 90) {
+            ghostPercent += (90 - ghostPercent) * 0.08;
+            document.getElementById('progressFill').style.width = ghostPercent + '%';
+            document.getElementById('progressPercent').textContent = ghostPercent.toFixed(1) + '%';
+        }
+    }, 200);
 
     try {
-        const res = await fetch(`/api/video/download?url=${encodeURIComponent(url)}&format=${format}&quality=${quality}`);
+        const res = await fetch('/api/video/download', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, format })
+        });
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
-            throw new Error(err.error || 'Échec du téléchargement');
+            throw new Error(err.error || 'Echec du telechargement');
         }
         const data = await res.json();
+        currentJobId = data.jobId;
 
-        currentDownload = {
-            token: data.token,
-            ext: data.ext,
-            size: data.size,
-            streamUrl: data.streamUrl,
-            downloadUrl: data.downloadUrl,
-            format
+        // SSE
+        const evtSource = new EventSource('/api/video/progress/' + currentJobId);
+        let done = false;
+
+        evtSource.onmessage = (event) => {
+            const msg = JSON.parse(event.data);
+            if (msg.type === 'progress') {
+                clearInterval(ghostInterval);
+                if (msg.percent > 0) {
+                    document.getElementById('progressFill').style.width = msg.percent + '%';
+                    document.getElementById('progressPercent').textContent = msg.percent.toFixed(1) + '%';
+                }
+                if (msg.speed) document.getElementById('progressSpeed').textContent = msg.speed;
+                if (msg.eta) document.getElementById('progressEta').textContent = 'ETA ' + msg.eta;
+            } else if (msg.type === 'done') {
+                done = true;
+                clearInterval(ghostInterval);
+                evtSource.close();
+                showPreview(msg);
+            } else if (msg.type === 'error') {
+                done = true;
+                clearInterval(ghostInterval);
+                evtSource.close();
+                onDownloadFail(msg.message);
+            }
         };
 
-        // Préparer le lecteur selon le format
-        const playerWrap = document.getElementById('dlPlayerWrap');
-        const sizeMb = (data.size / 1024 / 1024).toFixed(2);
-        const isAudio = format === 'mp3';
+        evtSource.onerror = () => {
+            clearInterval(ghostInterval);
+            evtSource.close();
+        };
 
-        if (isAudio) {
-            playerWrap.innerHTML = `<audio id="dlPlayer" controls preload="metadata" src="${data.streamUrl}"></audio>`;
+        // Polling fallback
+        const pollId = setInterval(async () => {
+            if (done) { clearInterval(pollId); return; }
+            try {
+                const r = await fetch('/api/video/status/' + currentJobId);
+                const s = await r.json();
+                if (s.status === 'done') {
+                    done = true; clearInterval(pollId); clearInterval(ghostInterval);
+                    showPreview(s);
+                } else if (s.status === 'error') {
+                    done = true; clearInterval(pollId); clearInterval(ghostInterval);
+                    onDownloadFail(s.error);
+                }
+            } catch (e) {}
+        }, 1500);
+        setTimeout(() => clearInterval(pollId), 300000);
+
+    } catch (err) {
+        clearInterval(ghostInterval);
+        onDownloadFail(err.message);
+    }
+}
+
+function showPreview(msg) {
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressPercent').textContent = '100%';
+    document.getElementById('progressSpeed').textContent = '';
+    document.getElementById('progressEta').textContent = '';
+
+    setTimeout(() => {
+        document.getElementById('progressBox').style.display = 'none';
+        const video = document.getElementById('previewVideo');
+        const audio = document.getElementById('previewAudio');
+        const info = document.getElementById('previewInfo');
+        const saveBtn = document.getElementById('saveBtn');
+
+        const sizeMb = msg.size ? (msg.size / 1024 / 1024).toFixed(2) + ' Mo' : '';
+        info.textContent = (msg.fileName || 'fichier') + (sizeMb ? ' • ' + sizeMb : '');
+
+        if (msg.isVideo !== false) {
+            video.src = msg.downloadUrl;
+            video.style.display = 'block';
+            audio.style.display = 'none';
+            audio.pause();
+            audio.removeAttribute('src');
         } else {
-            playerWrap.innerHTML = `<video id="dlPlayer" controls playsinline preload="metadata" src="${data.streamUrl}"></video>`;
+            audio.src = msg.downloadUrl;
+            audio.style.display = 'block';
+            video.style.display = 'none';
+            video.pause();
+            video.removeAttribute('src');
         }
 
-        document.getElementById('dlMeta').textContent = `📁 ${sizeMb} MB · ${data.ext.toUpperCase()} · Fichier temporaire`;
+        saveBtn.href = msg.saveUrl || msg.downloadUrl;
+        saveBtn.setAttribute('download', msg.fileName || 'video');
+        document.getElementById('previewBox').style.display = 'block';
+        document.getElementById('previewBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        document.querySelectorAll('.format-btn').forEach(b => b.disabled = false);
+        toast('Telechargement pret !', 'success');
+    }, 400);
+}
 
-        dlResult.classList.add('show');
-        document.getElementById('loading').classList.remove('show');
-
-        setTimeout(() => {
-            dlResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 200);
-
-        toast('✅ Téléchargement prêt !', 'success');
-    } catch (err) {
-        document.getElementById('loading').classList.remove('show');
-        toast(err.message, 'error');
-    }
+function onDownloadFail(message) {
+    document.getElementById('progressBox').style.display = 'none';
+    toast('Erreur : ' + message, 'error');
+    document.querySelectorAll('.format-btn').forEach(b => b.disabled = false);
 }
 
 function downloadFile() {

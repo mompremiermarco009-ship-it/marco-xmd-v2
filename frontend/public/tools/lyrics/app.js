@@ -140,7 +140,85 @@ function buildFormattedLyrics(data) {
     return lines.join('\n');
 }
 
-async function searchLyrics() {
+
+// ═══════════════════════════════════════════════════════════
+//  ALTERNATIVES + REFRESH
+// ═══════════════════════════════════════════════════════════
+let currentAlternatives = [];
+
+function renderAlternatives(alternatives) {
+    currentAlternatives = alternatives || [];
+    const resultEl = document.getElementById('lyricsResult');
+    const existing = document.getElementById('lyrics-alts');
+    if (existing) existing.remove();
+
+    if (!currentAlternatives.length) return;
+
+    const altHtml = document.createElement('div');
+    altHtml.id = 'lyrics-alts';
+    altHtml.className = 'lyrics-alts';
+    altHtml.innerHTML = '<div class="lyrics-alt-title"><i class="fas fa-layer-group"></i> Autres versions disponibles</div>' +
+        currentAlternatives.map(function(a, i) {
+            return '<div class="lyrics-alt" data-index="' + i + '">' +
+                '<div class="lyrics-alt-info">' +
+                    '<strong>' + escapeHtml(a.title || '—') + (a.synced ? '<span class="lyrics-alt-badge">Sync</span>' : '') + '</strong>' +
+                    '<small>' + escapeHtml(a.artist || '—') + ' · ' + escapeHtml(a.provider || '') + '</small>' +
+                '</div>' +
+                '<span class="lyrics-alt-score">' + (a.score || 0) + '</span>' +
+            '</div>';
+        }).join('');
+    resultEl.appendChild(altHtml);
+
+    // Click sur alternative
+    altHtml.querySelectorAll('.lyrics-alt').forEach(function(el) {
+        el.addEventListener('click', function() {
+            const idx = parseInt(el.dataset.index);
+            useAlternative(idx);
+        });
+    });
+}
+
+function useAlternative(index) {
+    const alt = currentAlternatives[index];
+    if (!alt) return;
+
+    // Mettre a jour l'affichage principal
+    document.getElementById('lyricsContent').textContent = alt.lyrics || '';
+    document.getElementById('lyricsContent').classList.remove('no-lyrics');
+
+    // Mettre a jour currentLyrics
+    if (currentLyrics) {
+        currentLyrics.lyrics = alt.lyrics;
+        currentLyrics.source = alt.provider;
+        currentLyrics.formatted = buildFormattedLyrics({
+            query: currentLyrics.query,
+            video: { title: currentLyrics.title, artist: currentLyrics.artist },
+            lyrics: alt.lyrics
+        });
+    }
+
+    // Retirer des alternatives et re-render
+    const remaining = currentAlternatives.filter(function(_, i) { return i !== index; });
+    renderAlternatives(remaining);
+
+    toast('Version ' + alt.provider + ' chargee', 'success');
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = String(str || '');
+    return div.innerHTML;
+}
+
+function refreshLyrics() {
+    if (!currentLyrics) return;
+    const query = currentLyrics.query;
+    document.getElementById('searchInput').value = query;
+    searchLyrics(true);
+}
+
+
+async function searchLyrics(forceRefresh) {
     const input = document.getElementById('searchInput');
     const query = input.value.trim();
     if (!query) return toast('Entrez un titre de chanson', 'error');
@@ -161,7 +239,8 @@ async function searchLyrics() {
     if (typeof stopLyricsPlay === 'function') stopLyricsPlay();
 
     try {
-        const res = await fetch(`/api/lyrics/search?q=${encodeURIComponent(query)}`);
+        const refreshParam = forceRefresh ? '&refresh=true' : '';
+        const res = await fetch(`/api/lyrics/search?q=${encodeURIComponent(query)}${refreshParam}`);
         const data = await res.json();
 
         if (!res.ok) throw new Error(data.error || 'Aucune parole trouvée');
@@ -190,10 +269,17 @@ async function searchLyrics() {
         const thumbEl = document.getElementById('lyricsThumb');
         const thumbWrap = document.getElementById('lyricsThumbWrap');
 
-        if (currentLyrics.thumbnail) {
+        console.log('[thumb] URL:', currentLyrics.thumbnail);
+        if (currentLyrics.thumbnail && currentLyrics.thumbnail.startsWith('http')) {
+            thumbEl.onerror = function() {
+                console.warn('[thumb] FAILED:', this.src);
+                marcoThumbFallback(this);
+            };
             thumbEl.src = currentLyrics.thumbnail;
             thumbWrap.style.display = 'block';
+            console.log('[thumb] src set');
         } else {
+            console.warn('[thumb] URL invalide ou vide');
             thumbWrap.style.display = 'none';
         }
 
@@ -236,8 +322,11 @@ async function searchLyrics() {
 
         result.classList.add('show');
 
+        // Afficher les alternatives
+        renderAlternatives(data.alternatives || []);
+
         if (currentLyrics.hasLyrics) {
-            toast('✅ Paroles trouvées !', 'success');
+            toast('✅ Paroles trouvées !' + (data.cached ? ' (cache)' : ''), 'success');
         } else {
             toast('⚠️ Chanson trouvée, paroles introuvables', 'error');
         }

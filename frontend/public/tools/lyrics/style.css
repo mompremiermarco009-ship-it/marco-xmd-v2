@@ -503,3 +503,120 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         height: 62px;
     }
 }
+
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  ALTERNATIVES — Multi-provider results                      */
+/* ═══════════════════════════════════════════════════════════ */
+.lyrics-alts {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+.lyrics-alts-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.lyrics-alt {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface-alt, #1e293b);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+.lyrics-alt:hover {
+    border-color: var(--primary);
+    background: var(--surface);
+}
+.lyrics-alt:last-child { margin-bottom: 0; }
+.lyrics-alt-info {
+    flex: 1;
+    min-width: 0;
+}
+.lyrics-alt-info strong {
+    display: block;
+    font-size: 0.92rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+.lyrics-alt-info small {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+.lyrics-alt-score {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.75rem;
+    border-radius: 20px;
+}
+.lyrics-alt-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 8px;
+    background: var(--success, #10b981);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* Bouton refresh + badge cache */
+.lyrics-refresh-btn {
+    background: var(--surface-alt, #1e293b);
+    border: 1px solid var(--border);
+    color: var(--text-soft);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+.lyrics-refresh-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    transform: rotate(180deg);
+}
+.lyrics-refresh-btn:active { transform: rotate(180deg) scale(0.9); }
+.lyrics-cache-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--success, #10b981);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 6px;
+    vertical-align: middle;
+}

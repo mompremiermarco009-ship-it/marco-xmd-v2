@@ -1,5 +1,7 @@
 // voice_studio/lib/tts.js — Wrapper edge-tts CLI (fichiers temporaires)
 const { spawn } = require('child_process');
+// Flag pour eviter les boucles infinies en cas de fallback
+let TTS_FALLBACK_ATTEMPTED = false;
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -9,7 +11,14 @@ if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
 function check() {
     return new Promise((resolve) => {
-        const p = spawn('edge-tts', ['--version']);
+        const p = spawn('edge-tts', [
+        '--voice', voice,
+        '--text', text,
+        '--write-media', outputFile,
+        ...(rate ? ['--rate', rate] : []),
+        ...(pitch ? ['--pitch', pitch] : []),
+        ...(volume ? ['--volume', volume] : [])
+    ]);
         p.on('close', (code) => resolve(code === 0));
         p.on('error', () => resolve(false));
     });
@@ -83,3 +92,33 @@ function cleanup(maxAgeMs = 30 * 60 * 1000) {
 }
 
 module.exports = { check, generate, removeByToken, cleanup, OUTPUT_DIR };
+
+// Fallback TTS si edge-tts est bloque
+async function fallbackTTS(text, voice, outputFile) {
+    console.log('[TTS] Fallback : tentative via Google Translate TTS...');
+    try {
+        const axios = require('axios');
+        const url = 'https://translate.google.com/translate_tts';
+        const params = {
+            ie: 'UTF-8',
+            q: text.substring(0, 200),
+            tl: voice.includes('fr') ? 'fr' : 'en',
+            client: 'tw-ob'
+        };
+        const response = await axios.get(url, {
+            params,
+            responseType: 'arraybuffer',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36',
+                'Referer': 'https://translate.google.com/'
+            },
+            timeout: 15000
+        });
+        fs.writeFileSync(outputFile, Buffer.from(response.data));
+        console.log('[TTS] Fallback Google Translate OK');
+        return true;
+    } catch (err) {
+        console.error('[TTS] Fallback echoue :', err.message);
+        return false;
+    }
+}

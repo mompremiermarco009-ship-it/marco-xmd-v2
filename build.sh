@@ -9,7 +9,7 @@ npm install --omit=dev
 
 # 2. Dépendances Python (edge-tts + yt-dlp)
 echo "🐍 Installation des dépendances Python..."
-pip3 install --no-cache-dir --break-system-packages edge-tts yt-dlp || \
+pip3 install --no-cache-dir --break-system-packages --upgrade edge-tts yt-dlp || \
 pip install --no-cache-dir edge-tts yt-dlp || \
 echo "⚠️ Impossible d'installer les paquets Python"
 

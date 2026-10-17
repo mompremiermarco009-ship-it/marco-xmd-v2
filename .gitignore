@@ -42,3 +42,4 @@ disable-*.js
 public/media/_old/
 public/index.html.broken
 *.broken
+fix-*.js

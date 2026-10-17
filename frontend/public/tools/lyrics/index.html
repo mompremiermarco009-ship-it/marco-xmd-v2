@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="/media/logo512.png">
 <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=2">
+<link rel="stylesheet" href="./style.css?v=3">
 <script>
 (function(){
   var s = localStorage.getItem('marco-theme');
@@ -133,6 +133,9 @@
         <button class="ly-action-btn wa" onclick="shareWhatsApp()">
           <i class="fab fa-whatsapp"></i> WhatsApp
         </button>
+        <button class="lyrics-refresh-btn" onclick="refreshLyrics()" title="Forcer une nouvelle recherche" aria-label="Actualiser">
+          <i class="fas fa-rotate"></i>
+        </button>
       </div>
 
       <!-- Paroles ou message "introuvable" -->
@@ -178,7 +181,7 @@
 </footer>
 
 <div class="toast" id="toast"></div>
-<script src="./app.js?v=2"></script>
+<script src="./app.js?v=3"></script>
 <script src="/pwa-update.js?v=20261004v5"></script>
 
 <script>
