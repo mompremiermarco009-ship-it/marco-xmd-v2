@@ -148,6 +148,10 @@ app.get("/admin.html", adminLimiter, adminAuth, (req, res) => {
     res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
 });
 
+// Pages compte utilisateur
+app.get("/profile.html", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "profile.html")));
+app.get("/history.html", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "history.html")));
+
 // Fichiers .well-known (assetlinks.json pour TWA Android)
 app.use("/.well-known", express.static(path.join(PUBLIC_DIR, ".well-known"), {
     dotfiles: "allow",
